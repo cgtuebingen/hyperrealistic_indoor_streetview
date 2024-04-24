@@ -6,7 +6,7 @@
   </strong>
 </p>
 
-https://github.com/cgtuebingen/SIGNeRF/assets/9963865/e52d1abd-d58e-431e-b220-4489acece6d2
+https://github.com/cgtuebingen/hyperrealistic_indoor_streetview/assets/9963865/0a519b96-e1d7-40c6-86f7-8eb69c25e82e
 
 
 # Overview
@@ -52,7 +52,7 @@ yarn -v
 ### Install the web application
 Next, we need to clone the repository to our local machine. You can do so by running the following command in your terminal:
 ```bash
-git clone ...
+git clone git@github.com:cgtuebingen/hyperrealistic_indoor_streetview.git
 ```
 
 After cloning the repository we need to install the dependencies for the web application. You can do so by running the following command in the root directory of the repository:
