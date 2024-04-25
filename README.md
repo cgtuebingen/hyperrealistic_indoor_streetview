@@ -61,7 +61,7 @@ git clone git@github.com:cgtuebingen/hyperrealistic_indoor_streetview.git
 
 After cloning the repository we need to install the dependencies for the web application. You can do so by running the following command in the root directory of the repository:
 ```bash
-cd path/to/your/repo
+cd ./hyperrealistic_indoor_streetview
 yarn install
 ```
 
