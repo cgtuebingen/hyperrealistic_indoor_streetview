@@ -172,7 +172,7 @@ Before starting the training be sure to be connected to the cluster and on one o
 ```bash
 pool-smi
 ```
-If you are sure that no one is using the cluster you can start the training with the following command:
+If you are sure that no one is using the cluster you can start the training with the following command (use atleast a RTX 2080Ti):
 ```bash
 ns-train splatfacto --data /new/path/to/processed/images/ --output-dir ./outputs
 ```
