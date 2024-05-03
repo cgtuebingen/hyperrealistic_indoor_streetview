@@ -21,6 +21,21 @@ In order to create your own gaussian splat for the web, we have to go through so
 - [Training](#training)
 - [Application](#application)
 
+# Update: 02.05
+> Issues regarding SSH Conection
+
+Use tmux to run a task on the server without relying on the SSH connection. After connecting to the server run the following commant to start a tmux session:
+```bash
+tmux new -s mysession
+```
+
+After starting the tmux session you can run the training command or installation in the tmux session. You can detach from the tmux session by pressing `ctrl + b` and then `d`. Or simply close the terminal. Your tmux session will still run in the background.
+
+After disconnecting from the server you can reconnect to the server and reattach to the tmux session. First connect to the server and then run the following command to list all tmux sessions:
+```bash
+tmux attach-session -t mysession
+```
+You can also have multiple sessions, just use different names for the sessions. 
 
 
 # Installation
