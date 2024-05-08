@@ -274,3 +274,4 @@ build
 *.vscode
 *.splat
 *.ply
+/.idea

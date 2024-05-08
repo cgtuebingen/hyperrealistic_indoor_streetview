@@ -1,4 +1,5 @@
 import './tailwind.css'
+import './styles/stats.css'
 import {
   Links,
   Meta,

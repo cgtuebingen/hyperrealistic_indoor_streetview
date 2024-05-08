@@ -1,0 +1,7 @@
+.performance-stats {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  z-index: 999 !important;
+  left: auto !important;
+}

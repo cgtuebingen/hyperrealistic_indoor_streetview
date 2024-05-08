@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Splat } from '@react-three/drei';
+import { OrbitControls, Splat, Stats } from '@react-three/drei';
 
 const CanvasLayer = () => {
 
@@ -35,6 +35,11 @@ const CanvasLayer = () => {
         <Splat
         position={[0, 2, 1]}
         src="https://huggingface.co/cakewalk/splat-data/resolve/main/nike.splat" />}
+        <Stats
+          showPanel={0} // 0: FPS, 1: MS, 2: MB, 3+: custom
+          style={{ position: 'absolute', top: 0, right: 0, zIndex: 999 }}
+          className="performance-stats"
+        />
       </Canvas>
     </div>
   );
