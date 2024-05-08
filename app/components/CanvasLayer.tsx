@@ -36,8 +36,7 @@ const CanvasLayer = () => {
         position={[0, 2, 1]}
         src="https://huggingface.co/cakewalk/splat-data/resolve/main/nike.splat" />}
         <Stats
-          showPanel={0} // 0: FPS, 1: MS, 2: MB, 3+: custom
-          style={{ position: 'absolute', top: 0, right: 0, zIndex: 999 }}
+          showPanel={0} // 0: FPS, 1: MS
           className="performance-stats"
         />
       </Canvas>
