@@ -1,0 +1,17 @@
+name: restart Server with changes on main push
+
+on:
+  push:
+    branches: 
+    - main
+  workflow_dispatch:
+
+jobs:
+  update-website:
+    runs-on: ubuntu-latest
+    steps:      
+      - name: connect to server
+        run: ssh root@46.38.250.233
+        with:
+          sshKey: ${{ secrets.SSHKEY }}
+    
