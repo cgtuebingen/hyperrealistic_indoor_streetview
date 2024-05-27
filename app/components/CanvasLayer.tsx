@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Splat, Stats } from '@react-three/drei';
+import {
+    OrbitControls,
+    Splat,
+    StatsGl
+} from '@react-three/drei';
 
 const CanvasLayer = () => {
 
@@ -26,6 +30,7 @@ const CanvasLayer = () => {
   return (
     <div className="absolute w-full h-full">
       <Canvas>
+        <StatsGl />
         <ambientLight />
         <pointLight position={[0, 0, 0]} />
         <OrbitControls />
@@ -35,10 +40,6 @@ const CanvasLayer = () => {
         <Splat
         position={[0, 2, 1]}
         src="https://huggingface.co/cakewalk/splat-data/resolve/main/nike.splat" />}
-        <Stats
-          showPanel={0} // 0: FPS, 1: MS
-          className="performance-stats"
-        />
       </Canvas>
     </div>
   );
