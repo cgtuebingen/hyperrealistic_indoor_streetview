@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Splat } from '@react-three/drei';
+import {
+    OrbitControls,
+    Splat,
+    StatsGl
+} from '@react-three/drei';
 
 const CanvasLayer = () => {
 
@@ -26,6 +30,7 @@ const CanvasLayer = () => {
   return (
     <div className="absolute w-full h-full">
       <Canvas>
+        <StatsGl />
         <ambientLight />
         <pointLight position={[0, 0, 0]} />
         <OrbitControls />
