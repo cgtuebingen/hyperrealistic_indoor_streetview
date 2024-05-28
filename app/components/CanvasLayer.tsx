@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
-    OrbitControls,
+    PointerLockControls,
     Splat,
     StatsGl
 } from '@react-three/drei';
+import { FirstPersonControls } from './FirstPersonControls.tsx'
 
 const CanvasLayer = () => {
 
@@ -33,7 +34,8 @@ const CanvasLayer = () => {
         <StatsGl />
         <ambientLight />
         <pointLight position={[0, 0, 0]} />
-        <OrbitControls />
+        <FirstPersonControls />
+        <PointerLockControls />
         {splatExists &&
         <Splat  position={[0, 2, 1]} src="splat.splat" /> }
         {!splatExists &&
