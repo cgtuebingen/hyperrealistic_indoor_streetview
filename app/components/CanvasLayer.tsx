@@ -1,9 +1,53 @@
 import {
-    PointerLockControls,
-    Splat,
-    StatsGl
+  Environment,
+  Gltf,
+  PointerLockControls,
+  PerformanceMonitor,
+  StatsGl,
 } from '@react-three/drei';
 import { FirstPersonControls } from './FirstPersonControls.tsx'
+import React, { useState, useEffect, useRef } from 'react';
+import { Leva, useControls } from 'leva';
+import { Canvas, useFrame, useThree,  } from '@react-three/fiber';
+import { Splat } from './splat-object';
+
+const gltfUrls = [
+  // telco
+] as const;
+
+const splatUrls = [
+
+  // output,
+
+  // telco_2_42k,
+  // telco_2_28k,
+  // telco_2_21k,
+  // telco_2_14k,
+  // telco_2_7k,
+  // telco4200k,
+  // telco463k,
+  // telco456k,
+  // telco449k,
+  // telco442k,
+  // telco435k,
+  // telco428k,
+  // telco421k,
+  // telco414k,
+  // telco30k,
+  // telco21k,
+  // telco14k,
+  // telco7k,
+  // model30k,
+
+  'https://antimatter15.com/splat-data/train.splat',
+  'https://antimatter15.com/splat-data/plush.splat',
+  'https://antimatter15.com/splat-data/truck.splat',
+  'https://antimatter15.com/splat-data/garden.splat',
+  'https://antimatter15.com/splat-data/treehill.splat',
+  'https://antimatter15.com/splat-data/stump.splat',
+  'https://antimatter15.com/splat-data/bicycle.splat',
+  'https://media.reshot.ai/models/nike_next/model.splat',
+] as const;
 
 const CanvasLayer = () => {
 
