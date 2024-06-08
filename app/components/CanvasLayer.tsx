@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
     PointerLockControls,
-    Splat,
     StatsGl
 } from '@react-three/drei';
 import { FirstPersonControls } from './FirstPersonControls.tsx'
+import { Splat } from './Splat.tsx';
 
 const CanvasLayer = () => {
 
