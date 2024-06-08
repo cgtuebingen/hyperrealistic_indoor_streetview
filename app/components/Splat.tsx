@@ -50,6 +50,7 @@ export type SharedState = {
   connect(target: TargetMesh): () => void
   update(target: TargetMesh, camera: THREE.Camera, hashed: boolean): void
   onProgress?: (event: ProgressEvent) => void
+  splats: string[]
 }
 
 declare global {
@@ -282,6 +283,7 @@ class SplatLoader extends THREE.Loader {
       covAndColorTexture: null!,
       centerAndScaleTexture: null!,
       onProgress,
+      splats: this.splats
     }
     load(shared)
       .then(onLoad)
@@ -292,56 +294,64 @@ class SplatLoader extends THREE.Loader {
   }
 }
 
+
+const never = new Promise(() => {});
+const mergeStreams = streams => {
+    const readers = streams.map(s => s.body.getReader());
+    const reads = streams.map(() => null);
+    const dones = [];
+    const allDone = Promise.all(streams.map(s => new Promise(resolve => {
+        dones.push(resolve);
+    })));
+
+    return new ReadableStreamDefaultReader(new ReadableStream({
+        start: controller => {
+            allDone.then(() => {
+                controller.close();
+            });
+        },
+        pull: controller =>
+            Promise.race(
+                readers.map((r, i) =>
+                    reads[i] ??= r.read().then(({value, done}) => {
+                        if (done) {
+                            dones[i]();
+                            return never;
+                        }
+
+                        controller.enqueue(value);
+                        reads[i] = null;
+                    })
+                )
+            ),
+        cancel: reason => {
+            for (const reader of readers) {
+                reader.cancel(reason);
+            }
+        },
+    }));
+};
+
 async function load(shared: SharedState) {
-    // TODO: make this accessible from the outside, we need to be able to set this from outside
-    // e.g.: <Splat src={['splat_A.splat', 'splat_B.splat']} position={[0, 2, 1]}/>
-    const splats = [(await fetch('splat_A.splat')), (await fetch('splat_B.splat'))]
-
-    // TODO: move this somewhere else
-    const never = new Promise(() => {});
-    const mergeStreams = streams => {
-        const readers = streams.map(s => s.body.getReader());
-        const reads = streams.map(() => null);
-        const dones = [];
-        const allDone = Promise.all(streams.map(s => new Promise(resolve => {
-            dones.push(resolve);
-        })));
-
-        return new ReadableStreamDefaultReader(new ReadableStream({
-            start: controller => {
-                allDone.then(() => {
-                    controller.close();
-                });
-            },
-            pull: controller =>
-                Promise.race(
-                    readers.map((r, i) =>
-                        reads[i] ??= r.read().then(({value, done}) => {
-                            if (done) {
-                                dones[i]();
-                                return never;
-                            }
-
-                            controller.enqueue(value);
-                            reads[i] = null;
-                        })
-                    )
-                ),
-            cancel: reason => {
-                for (const reader of readers) {
-                    reader.cancel(reason);
-                }
-            },
-        }));
-    };
+  let splats = [fetch(shared.url)];
+  if (shared.splats.length > 0) {
+    splats = await Promise.all(shared.splats.map(url => fetch(url)));
+  }
 
   shared.manager.itemStart(shared.url)
 
-  // TODO: check if any of the items in splats array is null, decide if we need to throw the error
-  // or keep rendering as long as one splat is valid (?)
-  const data = await fetch(shared.url)
+  try {
+    // Ensure all responses are ok (status code in the range 200-299)
+    splats.map(response => {
+        if (!response.ok) throw new Error(`Failed to fetch ${response.url}`);
+        if (response.body === null) throw new Error(`Failed to fetch body for ${response.url}`);
+    });
 
-  if (data.body === null) throw 'Failed to fetch file'
+    // If no errors were thrown, all fetches were successful
+    console.log("All fetches were successful");
+  } catch (error) {
+    throw 'Failed to fetch file'
+  }
 
   // sum up all content length headers to get final size of all splats to be loaded
   let _totalDownloadBytes = splats
@@ -684,12 +694,21 @@ export function Splat({
   const gl = useThree((state) => state.gl)
   const camera = useThree((state) => state.camera)
 
+  let splats = [];
+  if (src instanceof Array) {
+    splats = src;
+    src = src[0];
+  } else {
+    splats = [src];
+  }
+
   // Shared state, globally memoized, the same url re-uses the same daza
   const shared = useLoader(SplatLoader as unknown as LoaderProto<unknown>, src, (loader) => {
     loader.gl = gl
     loader.chunkSize = chunkSize
+    loader.splats = splats
   }) as SharedState
-
+  console.log(shared);
   // Listen to worker results, apply them to the target mesh
   React.useLayoutEffect(() => shared.connect(ref.current), [src])
   // Update the worker
