@@ -293,14 +293,63 @@ class SplatLoader extends THREE.Loader {
 }
 
 async function load(shared: SharedState) {
+    // TODO: make this accessible from the outside, we need to be able to set this from outside
+    // e.g.: <Splat src={['splat_A.splat', 'splat_B.splat']} position={[0, 2, 1]}/>
+    const splats = [(await fetch('splat_A.splat')), (await fetch('splat_B.splat'))]
+
+    // TODO: move this somewhere else
+    const never = new Promise(() => {});
+    const mergeStreams = streams => {
+        const readers = streams.map(s => s.body.getReader());
+        const reads = streams.map(() => null);
+        const dones = [];
+        const allDone = Promise.all(streams.map(s => new Promise(resolve => {
+            dones.push(resolve);
+        })));
+
+        return new ReadableStreamDefaultReader(new ReadableStream({
+            start: controller => {
+                allDone.then(() => {
+                    controller.close();
+                });
+            },
+            pull: controller =>
+                Promise.race(
+                    readers.map((r, i) =>
+                        reads[i] ??= r.read().then(({value, done}) => {
+                            if (done) {
+                                dones[i]();
+                                return never;
+                            }
+
+                            controller.enqueue(value);
+                            reads[i] = null;
+                        })
+                    )
+                ),
+            cancel: reason => {
+                for (const reader of readers) {
+                    reader.cancel(reason);
+                }
+            },
+        }));
+    };
+
   shared.manager.itemStart(shared.url)
+
+  // TODO: check if any of the items in splats array is null, decide if we need to throw the error
+  // or keep rendering as long as one splat is valid (?)
   const data = await fetch(shared.url)
 
   if (data.body === null) throw 'Failed to fetch file'
-  let _totalDownloadBytes = data.headers.get('Content-Length')
+
+  // sum up all content length headers to get final size of all splats to be loaded
+  let _totalDownloadBytes = splats
+                              .map(data => parseInt(data.headers.get('Content-Length'), 10) || 0)
+                              .reduce((acc, value) => acc + value, 0);
   const totalDownloadBytes = _totalDownloadBytes ? parseInt(_totalDownloadBytes) : undefined
   if (totalDownloadBytes == undefined) throw 'Failed to get content length'
-  shared.stream = data.body.getReader()
+  shared.stream = mergeStreams(splats);
   shared.totalDownloadBytes = totalDownloadBytes
   shared.numVertices = Math.floor(shared.totalDownloadBytes / shared.rowLength)
   const context = shared.gl.getContext()
