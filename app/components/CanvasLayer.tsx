@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
     PointerLockControls,
@@ -6,10 +6,15 @@ import {
     StatsGl
 } from '@react-three/drei';
 import { FirstPersonControls } from './FirstPersonControls.tsx'
+import { Leva, useControls } from 'leva';
+import { useMemo } from 'react'
 
 const CanvasLayer = () => {
 
   const [splatExists, setSplatExists] = useState(false);
+  const [isPointerLocked, setIsPointerLocked] = useState(true);
+  const handleOverlayEnter = () => setIsPointerLocked(false);
+  const handleOverlayLeave = () => setIsPointerLocked(true);
 
   useEffect(() => {
     const checkFileExists = async () => {
@@ -28,14 +33,27 @@ const CanvasLayer = () => {
     checkFileExists();
   }, []);
 
+
+  const options = useMemo(() => {
+    return {
+      speed: { value: 100, min: 1, max: 500, step: 10 },
+    }
+  }, [])
+
+  const splatOptions = useControls('Admin Panel', options);
+
+
   return (
     <div className="absolute w-full h-full">
+      <div onMouseEnter={handleOverlayEnter} onMouseLeave={handleOverlayLeave}>
+        <Leva oneLineLabels />
+      </div>
       <Canvas>
         <StatsGl />
         <ambientLight />
         <pointLight position={[0, 0, 0]} />
-        <FirstPersonControls />
-        <PointerLockControls />
+        <FirstPersonControls speed={splatOptions.speed} />
+        {isPointerLocked && <PointerLockControls />}
         {splatExists &&
         <Splat  position={[0, 2, 1]} src="splat.splat" /> }
         {!splatExists &&
