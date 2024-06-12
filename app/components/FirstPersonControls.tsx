@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-export const FirstPersonControls = () => {
+export const FirstPersonControls = (speed) => {
   const { camera } = useThree();
   const moveForward = useRef(false);
   const moveBackward = useRef(false);
@@ -87,7 +87,7 @@ export const FirstPersonControls = () => {
 
   useFrame((_, delta) => {
     // change this if you want to move faster / slower
-    const movementSpeed = 300.0;
+    const movementSpeed = speed.speed ?? 300;
     // Get the camera's forward and left direction
     camera.getWorldDirection(forward);
     forward.y = 0;

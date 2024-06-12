@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -40,7 +40,7 @@ jobs:
             nvm install 18.20.2
             nvm use 18.20.2
             # Later replace this with secrets.TARGET
-            cd /root/hyperrealistic_indoor_streetview
+            cd ${{ secrets.TARGET }}
             git pull
             yarn install
             
