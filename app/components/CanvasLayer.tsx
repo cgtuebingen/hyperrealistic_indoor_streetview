@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
     PointerLockControls,
-    Splat,
     StatsGl
 } from '@react-three/drei';
 import { FirstPersonControls } from './FirstPersonControls.tsx'
 import { useFetcher, useLoaderData } from "@remix-run/react";
+
+import { Splat } from './Splat.tsx';
+import { Leva, useControls } from 'leva';
+import { useMemo } from 'react'
 
 const CanvasLayer = () => {
 
@@ -14,6 +17,8 @@ const CanvasLayer = () => {
   const [splatUrls, setSplatUrls] = useState<string[]>([]);
   const [selectedSplat, setSelectedSplat] = useState<string>('');
   const [isPointerLocked, setIsPointerLocked] = useState(true);
+  const handleOverlayEnter = () => setIsPointerLocked(false);
+  const handleOverlayLeave = () => setIsPointerLocked(true);
 
   // fetch list of files from backend & filter them
   useEffect(() => {
@@ -50,6 +55,15 @@ const CanvasLayer = () => {
   const handleOverlayEnter = () => setIsPointerLocked(false);
   const handleOverlayLeave = () => setIsPointerLocked(true);
 
+  const options = useMemo(() => {
+    return {
+      speed: { value: 100, min: 1, max: 500, step: 10 },
+    }
+  }, [])
+
+  const splatOptions = useControls('Admin Panel', options);
+
+
   return (
     <div className="absolute w-full h-full">
       <div onMouseEnter={handleOverlayEnter} onMouseLeave={handleOverlayLeave}>
@@ -64,12 +78,13 @@ const CanvasLayer = () => {
               </option>
             ))}
           </select>
+          <Leva oneLineLabels />
       </div>
       <Canvas>
         <StatsGl />
         <ambientLight />
         <pointLight position={[0, 0, 0]} />
-        <FirstPersonControls />
+        <FirstPersonControls speed={splatOptions.speed} />
         {isPointerLocked && <PointerLockControls />}
         <Splat position={[0, 2, 1]} src={selectedSplat || "https://huggingface.co/cakewalk/splat-data/resolve/main/nike.splat"} />
       </Canvas>
