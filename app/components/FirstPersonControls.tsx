@@ -20,9 +20,21 @@ export const FirstPersonControls = (speed) => {
 
   // temporary location for rooms, TODO: move this outside of the controller
   const rooms = [
-    { minX: -50, maxX: 50, minY: 0, maxY: 20, minZ: -50, maxZ: 50, slope: { angle: Math.PI / 6, position: { x: 0, y: 0, z: 0 } } },
-    { minX: 50, maxX: 60, minY: 0, maxY: 10, minZ: 0, maxZ: 10, slope: { angle: 0, position: { x: 0, y: 0, z: 0 } } },
-    { minX: 60, maxX: 160, minY: 0, maxY: 20, minZ: -50, maxZ: 50, slope: { angle: Math.PI / 4, position: { x: 110, y: 0, z: 0 } } },
+    {
+      minX: -50, maxX: 50, minY: 0, maxY: 20, minZ: -50, maxZ: 50,
+      slopes: [
+        { angle: Math.PI / 3, position: { x: 0, y: 0, z: 0 }, width: 10 },
+        { angle: Math.PI / 3, position: { x: 10, y: 0, z: 0 }, width: 10 }
+      ]
+    },
+    {
+      minX: 50, maxX: 60, minY: 0, maxY: 10, minZ: 0, maxZ: 10,
+      slopes: []
+    },
+    {
+      minX: 60, maxX: 160, minY: 0, maxY: 20, minZ: -50, maxZ: 50,
+      slopes: []
+    },
   ];
 
   useEffect(() => {
@@ -110,18 +122,24 @@ export const FirstPersonControls = (speed) => {
       );
       scene.add(roomBox);
 
-      // Add slope to the scene
-      const slopeGeometry = new THREE.PlaneGeometry(100, 100);
-      const slopeMaterial = new THREE.MeshBasicMaterial({
-        color: 0xcccccc,
-        side: THREE.DoubleSide,
-        wireframe: true
+      // Add slopes to the scene
+      room.slopes.forEach((slope, index) => {
+        const slopeGeometry = new THREE.PlaneGeometry(slope.width, 100);
+        const slopeMaterial = new THREE.MeshBasicMaterial({
+          color: 0xcccccc,
+          side: THREE.DoubleSide,
+          wireframe: true
+        });
+        const slopeMesh = new THREE.Mesh(slopeGeometry, slopeMaterial);
+        slopeMesh.rotation.x = -slope.angle;
+        slopeMesh.position.set(
+          room.minX + (room.maxX - room.minX) / 2 + slope.position.x,
+          (room.minY + room.maxY) / 2 + slope.position.y,
+          room.minZ + (room.maxZ - room.minZ) / 2 + slope.position.z
+        );
+        slopeMesh.name = `slope-${room.minX}-${room.maxX}-${room.minZ}-${room.maxZ}-${index}`; // Naming slopes to easily find them later
+        scene.add(slopeMesh);
       });
-      const slope = new THREE.Mesh(slopeGeometry, slopeMaterial);
-      slope.rotation.x = -room.slope.angle;
-      slope.position.set(room.slope.position.x, room.slope.position.y, room.slope.position.z);
-      slope.name = `slope-${room.minX}-${room.maxX}-${room.minZ}-${room.maxZ}`; // Naming slopes to easily find them later
-      scene.add(slope);
     });
 
     return () => {
@@ -171,8 +189,8 @@ export const FirstPersonControls = (speed) => {
     );
 
     // detect if user is going into another room
-    if(currentRoom && nextRoom && currentRoom !== nextRoom) {
-        currentRoom = nextRoom;
+    if (currentRoom && nextRoom && currentRoom !== nextRoom) {
+      currentRoom = nextRoom;
     }
 
     if (currentRoom) {
@@ -180,19 +198,27 @@ export const FirstPersonControls = (speed) => {
       newPosition.x = Math.max(currentRoom.minX, Math.min(currentRoom.maxX, newPosition.x));
       newPosition.z = Math.max(currentRoom.minZ, Math.min(currentRoom.maxZ, newPosition.z));
 
-      // Calculate ground height using a raycaster and specific slope
-      const slopeObject = scene.getObjectByName(`slope-${currentRoom.minX}-${currentRoom.maxX}-${currentRoom.minZ}-${currentRoom.maxZ}`);
-      if (slopeObject) {
-        const raycaster = new THREE.Raycaster(newPosition.clone().setY(100), new THREE.Vector3(0, -1, 0));
-        const intersects = raycaster.intersectObject(slopeObject, true);
-        if (intersects.length > 0) {
-          const groundHeight = intersects[0].point.y;
-          newPosition.y = groundHeight + cameraHeight;
-        } else {
-          // Default to room min height if no ground intersection found
-          newPosition.y = currentRoom.minY + cameraHeight;
+      // Calculate ground height using a raycaster and specific slopes
+      const raycaster = new THREE.Raycaster(newPosition.clone().setY(100), new THREE.Vector3(0, -1, 0));
+      let groundHeight = currentRoom.minY;
+      let foundGround = false;
+
+      for (let i = 0; i < currentRoom.slopes.length; i++) {
+        const slopeObject = scene.getObjectByName(`slope-${currentRoom.minX}-${currentRoom.maxX}-${currentRoom.minZ}-${currentRoom.maxZ}-${i}`);
+        if (slopeObject) {
+          const intersects = raycaster.intersectObject(slopeObject, true);
+          if (intersects.length > 0) {
+            groundHeight = Math.max(groundHeight, intersects[0].point.y);
+            foundGround = true;
+          }
         }
       }
+
+      if (!foundGround) {
+        groundHeight = currentRoom.minY;
+      }
+
+      newPosition.y = groundHeight + cameraHeight;
 
       // Clamp Y position to the room boundaries
       newPosition.y = Math.max(currentRoom.minY + cameraHeight, Math.min(currentRoom.maxY, newPosition.y));
