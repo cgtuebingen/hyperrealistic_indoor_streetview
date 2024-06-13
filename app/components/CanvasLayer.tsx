@@ -17,8 +17,7 @@ const CanvasLayer = () => {
   const [splatUrls, setSplatUrls] = useState<string[]>([]);
   const [selectedSplat, setSelectedSplat] = useState<string>('');
   const [isPointerLocked, setIsPointerLocked] = useState(true);
-  const handleOverlayEnter = () => setIsPointerLocked(false);
-  const handleOverlayLeave = () => setIsPointerLocked(true);
+
 
   // fetch list of files from backend & filter them
   useEffect(() => {
