@@ -25,15 +25,30 @@ export const FirstPersonControls = (speed) => {
       slopes: [
         { angle: Math.PI / 3, position: { x: 0, y: 0, z: 0 }, width: 10 },
         { angle: Math.PI / 3, position: { x: 10, y: 0, z: 0 }, width: 10 }
-      ]
+      ],
+      elements: {
+        arrows: [],
+        panes: [],
+        windowarcs: []
+      }
     },
     {
       minX: 50, maxX: 60, minY: 0, maxY: 10, minZ: 0, maxZ: 10,
-      slopes: []
+      slopes: [],
+      elements: {
+        arrows: [],
+        panes: [],
+        windowarcs: []
+      }
     },
     {
       minX: 60, maxX: 160, minY: 0, maxY: 20, minZ: -50, maxZ: 50,
-      slopes: []
+      slopes: [],
+      elements: {
+        arrows: [],
+        panes: [],
+        windowarcs: []
+      }
     },
   ];
 
@@ -139,6 +154,19 @@ export const FirstPersonControls = (speed) => {
         );
         slopeMesh.name = `slope-${room.minX}-${room.maxX}-${room.minZ}-${room.maxZ}-${index}`; // Naming slopes to easily find them later
         scene.add(slopeMesh);
+      });
+
+      // Add (interactable) elements to the scene
+      room.elements.arrows.forEach(() => {
+
+      });
+
+      room.elements.panes.forEach(() => {
+
+      });
+
+      room.elements.windowarcs.forEach(() => {
+
       });
     });
 
