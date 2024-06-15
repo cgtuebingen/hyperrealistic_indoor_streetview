@@ -23,12 +23,14 @@ export const FirstPersonControls = (speed) => {
     {
       minX: -50, maxX: 50, minY: 0, maxY: 20, minZ: -50, maxZ: 50,
       slopes: [
-        { angle: Math.PI / 3, position: { x: 0, y: 0, z: 0 }, width: 10 },
+        { angle: Math.PI / 3 , position: { x: 0, y: 0, z: 0 }, width: 10 },
         { angle: Math.PI / 3, position: { x: 10, y: 0, z: 0 }, width: 10 }
       ],
       elements: {
         arrows: [],
-        panes: [],
+        panes: [
+          { angle: Math.PI / 6, position: { x: 20, y: -10, z: 20}, sizefactor: 10, content: "/images/testbild.png"}
+        ],
         windowarcs: []
       }
     },
@@ -116,6 +118,8 @@ export const FirstPersonControls = (speed) => {
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
 
+    const textureLoader = new THREE.TextureLoader();
+
     // Add transparent boxes to visualize rooms and slopes
     rooms.forEach(room => {
       const roomGeometry = new THREE.BoxGeometry(
@@ -161,8 +165,24 @@ export const FirstPersonControls = (speed) => {
 
       });
 
-      room.elements.panes.forEach(() => {
+      room.elements.panes.forEach((pane, index) => {
+        textureLoader.load(pane.content, (texture) => {
+          const aspectRatio = texture.image.width / texture.image.height;
+          const paneHeight = pane.sizefactor; // or any desired height
+          const paneWidth = paneHeight * aspectRatio;
 
+          const paneGeometry = new THREE.PlaneGeometry(paneWidth, paneHeight);
+          const paneMaterial = new THREE.MeshBasicMaterial({ map: texture });
+          const paneMesh = new THREE.Mesh(paneGeometry, paneMaterial);
+          paneMesh.rotation.x = -pane.angle;
+          paneMesh.position.set(
+            room.minX + (room.maxX - room.minX) / 2 + pane.position.x,
+            (room.minY + room.maxY) / 2 + pane.position.y,
+            room.minZ + (room.maxZ - room.minZ) / 2 + pane.position.z
+          );
+          paneMesh.name = `pane-${room.minX}-${room.maxX}-${room.minZ}-${room.maxZ}-${index}`; // Naming panes to easily find them later
+          scene.add(paneMesh);
+        });
       });
 
       room.elements.windowarcs.forEach(() => {
