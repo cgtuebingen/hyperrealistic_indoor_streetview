@@ -29,9 +29,11 @@ export const FirstPersonControls = (speed) => {
       elements: {
         arrows: [],
         panes: [
-          { angle: Math.PI / 6, position: { x: 20, y: -10, z: 20}, sizefactor: 10, content: "/images/testbild.png"}
+          { verticalRotation: Math.PI / 6, horizontalRotation: Math.PI/4, position: { x: 20, y: -10, z: 20}, sizefactor: 10, content: "/images/testbild.png"},
         ],
-        windowarcs: []
+        windowarcs: [
+          { rotation: 2, position: { x: -20, y: -10, z: -20}, sizefactor: 10, content: "/images/testbild.png"}
+        ]
       }
     },
     {
@@ -174,7 +176,8 @@ export const FirstPersonControls = (speed) => {
           const paneGeometry = new THREE.PlaneGeometry(paneWidth, paneHeight);
           const paneMaterial = new THREE.MeshBasicMaterial({ map: texture });
           const paneMesh = new THREE.Mesh(paneGeometry, paneMaterial);
-          paneMesh.rotation.x = -pane.angle;
+          //paneMesh.rotation.x = -pane.verticalRotation* Math.cos(pane.horizontalRotation);
+          paneMesh.rotation.set(-pane.verticalRotation, pane.horizontalRotation, 0, 'YXZ');
           paneMesh.position.set(
             room.minX + (room.maxX - room.minX) / 2 + pane.position.x,
             (room.minY + room.maxY) / 2 + pane.position.y,
@@ -185,7 +188,7 @@ export const FirstPersonControls = (speed) => {
         });
       });
 
-      room.elements.windowarcs.forEach(() => {
+      room.elements.windowarcs.forEach((pane, index) => {
 
       });
     });
