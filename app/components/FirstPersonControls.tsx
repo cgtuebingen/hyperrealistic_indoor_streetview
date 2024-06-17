@@ -29,10 +29,10 @@ export const FirstPersonControls = (speed) => {
       elements: {
         arrows: [],
         panes: [
-          { verticalRotation: Math.PI / 6, horizontalRotation: Math.PI/4, position: { x: 20, y: -10, z: 20}, sizefactor: 10, content: "/images/testbild.png"},
+          { position: { x: 20, y: -10, z: 20}, verticalRotation: Math.PI / 6, horizontalRotation: Math.PI/4, sizefactor: 10, content: "/images/testbild.png"},
         ],
         windowarcs: [
-          { rotation: 2, position: { x: -20, y: -10, z: -20}, sizefactor: 10, content: "/images/testbild.png"}
+          { position: { x: 0, y: 0, z: 0}, verticalRotation: 2, arcRadius: 10, arcHeight: 30, content: "/images/testbild.png"}
         ]
       }
     },
@@ -176,7 +176,6 @@ export const FirstPersonControls = (speed) => {
           const paneGeometry = new THREE.PlaneGeometry(paneWidth, paneHeight);
           const paneMaterial = new THREE.MeshBasicMaterial({ map: texture });
           const paneMesh = new THREE.Mesh(paneGeometry, paneMaterial);
-          //paneMesh.rotation.x = -pane.verticalRotation* Math.cos(pane.horizontalRotation);
           paneMesh.rotation.set(-pane.verticalRotation, pane.horizontalRotation, 0, 'YXZ');
           paneMesh.position.set(
             room.minX + (room.maxX - room.minX) / 2 + pane.position.x,
@@ -188,8 +187,19 @@ export const FirstPersonControls = (speed) => {
         });
       });
 
-      room.elements.windowarcs.forEach((pane, index) => {
-
+      room.elements.windowarcs.forEach((arc, index) => {
+        const texture = textureLoader.load(arc.content);
+        const arcGeometry = new THREE.CylinderGeometry(arc.arcRadius, arc.arcRadius, arc.arcHeight, 16, 1, true, 0, Math.PI);
+        const arcMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide});
+        const arcMesh = new THREE.Mesh(arcGeometry, arcMaterial);
+        arcMesh.rotation.y = arc.verticalRotation;
+        arcMesh.position.set(
+          room.minX + (room.maxX - room.minX) / 2 + arc.position.x,
+          (room.minY + room.maxY) / 2 + arc.position.y,
+          room.minZ + (room.maxZ - room.minZ) / 2 + arc.position.z
+        );
+        arcMesh.name = `arc-${room.minX}-${room.maxX}-${room.minZ}-${room.maxZ}-${index}`; // Naming panes to easily find them later
+        scene.add(arcMesh);
       });
     });
 
