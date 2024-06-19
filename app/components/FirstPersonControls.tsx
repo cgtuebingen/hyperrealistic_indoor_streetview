@@ -23,17 +23,24 @@ export const FirstPersonControls = (speed) => {
     {
       minX: -50, maxX: 50, minY: 0, maxY: 20, minZ: -50, maxZ: 50,
       slopes: [
-        { angle: Math.PI / 3, position: { x: 0, y: 0, z: 0 }, width: 10 },
-        { angle: Math.PI / 3, position: { x: 10, y: 0, z: 0 }, width: 10 }
+        { angle: Math.PI / 3, position: { x: 0, y: 0, z: 0 }, width: 10, length: 50 },
+        { angle: Math.PI / 3, position: { x: 10, y: 5, z: 5 }, width: 5, length: 50 }
+      ],
+      objects: [
+        { minX: 5, maxX: 10, minY: 5, maxY: 10, minZ: -50, maxZ: 10 }
       ]
     },
     {
       minX: 50, maxX: 60, minY: 0, maxY: 10, minZ: 0, maxZ: 10,
-      slopes: []
+      slopes: [
+        { angle: Math.PI / 2, position: { x: 10, y: 5, z: 5 }, width: 5, length: 10 }
+        ],
+      objects: []
     },
     {
       minX: 60, maxX: 160, minY: 0, maxY: 20, minZ: -50, maxZ: 50,
-      slopes: []
+      slopes: [],
+      objects: []
     },
   ];
 
@@ -124,7 +131,7 @@ export const FirstPersonControls = (speed) => {
 
       // Add slopes to the scene
       room.slopes.forEach((slope, index) => {
-        const slopeGeometry = new THREE.PlaneGeometry(slope.width, 100);
+        const slopeGeometry = new THREE.PlaneGeometry(slope.width, slope.length);
         const slopeMaterial = new THREE.MeshBasicMaterial({
           color: 0xcccccc,
           side: THREE.DoubleSide,
