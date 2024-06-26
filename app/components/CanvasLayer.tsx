@@ -5,6 +5,7 @@ import {
     StatsGl
 } from '@react-three/drei';
 import { FirstPersonControls } from './FirstPersonControls.tsx'
+import TeleportControls from './TeleportControls.tsx';
 import { useFetcher, useLoaderData } from "@remix-run/react";
 
 import { Splat } from './Splat.tsx';
@@ -17,6 +18,9 @@ const CanvasLayer = () => {
   const [splatUrls, setSplatUrls] = useState<string[]>([]);
   const [selectedSplat, setSelectedSplat] = useState<string>('');
   const [isPointerLocked, setIsPointerLocked] = useState(true);
+
+  const teleportControlsRef = useRef();
+
 
 
   // fetch list of files from backend & filter them
@@ -62,6 +66,13 @@ const CanvasLayer = () => {
 
   const splatOptions = useControls('Admin Panel', options);
 
+  const handleTeleport = () => {
+    if (teleportControlsRef.current) {
+      // Test cooordinates
+      teleportControlsRef.current.teleport(1, 1, 1);
+    }
+  };
+
 
   return (
     <div className="absolute w-full h-full">
@@ -78,12 +89,16 @@ const CanvasLayer = () => {
             ))}
           </select>
           <Leva oneLineLabels />
+          <button onClick={handleTeleport} style={{ margin: '0px 450px', position: 'absolute', zIndex: 10 }}>
+          Teleport
+          </button>
       </div>
       <Canvas>
         <StatsGl />
         <ambientLight />
         <pointLight position={[0, 0, 0]} />
         <FirstPersonControls speed={splatOptions.speed} />
+        <TeleportControls ref={teleportControlsRef} />
         {isPointerLocked && <PointerLockControls />}
         <Splat position={[0, 2, 1]} src={selectedSplat || "https://huggingface.co/cakewalk/splat-data/resolve/main/nike.splat"} />
       </Canvas>
