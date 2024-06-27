@@ -23,6 +23,7 @@ jobs:
       - name: Update and Restart Server
         run: |
           ssh ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
+            set -e
             # Install nvm if not installed
             if ! command -v nvm &> /dev/null; then
               curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
