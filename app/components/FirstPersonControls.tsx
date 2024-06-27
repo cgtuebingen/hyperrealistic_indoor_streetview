@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { sqrt } from 'three/examples/jsm/nodes/Nodes.js';
 
 export const FirstPersonControls = (speed) => {
   const { camera, scene } = useThree();
@@ -18,6 +20,50 @@ export const FirstPersonControls = (speed) => {
   // Desired height above the ground
   const cameraHeight = 1.8;
 
+  
+  // temporary location for arrow graphs, TODO: move this outside of the controller  
+  type edge = {
+    arrow1: THREE.Object3D;
+    arrow2: THREE.Object3D;
+    weight: number;
+  }
+  
+  type arrowgraph = {
+    arrows: THREE.Object3D[];
+    edges: edge[];
+  }
+  
+  class ArrowGraph {
+    private graph: arrowgraph;
+    private scene: THREE.Scene;
+
+    constructor(scene: THREE.Scene) {
+      this.graph = { arrows: [], edges: [] };
+      this.scene = scene;
+    }
+  
+    addArrow(arrow: THREE.Object3D): void{
+      this.graph.arrows.push(arrow);
+    }
+  
+    addEdge(arrow1name: string, arrow2name: string): void {
+      const arrow1 = this.scene.getObjectByName(arrow1name);
+      const arrow2 = this.scene.getObjectByName(arrow2name);
+      if(arrow1 && arrow2){
+        const weight: number = Math.sqrt(
+          Math.pow(arrow1.position.x - arrow2.position.x, 2) +
+          Math.pow(arrow1.position.y - arrow2.position.y, 2)
+        );
+        const newEdge: edge = { arrow1, arrow2, weight };
+        this.graph.edges.push(newEdge);
+      }
+    }
+    updateArrowRotations(): void;
+  }
+
+  const graph = new ArrowGraph(scene);
+
+
   // temporary location for rooms, TODO: move this outside of the controller
   const rooms = [
     {
@@ -27,12 +73,18 @@ export const FirstPersonControls = (speed) => {
         { angle: Math.PI / 3, position: { x: 10, y: 0, z: 0 }, width: 10 }
       ],
       elements: {
-        arrows: [],
+        arrows: [
+          {position: { x: 20, y: -10, z: 20}, horizontalRotation: Math.PI, graphName: "Pfeil0"},
+          {position: { x: 40, y: -10, z: 10}, horizontalRotation: Math.PI, graphName: "Pfeil1"},
+          {position: { x: 0, y: -10, z: 0}, horizontalRotation: Math.PI, graphName: "Pfeil2"},
+          {position: { x: -10, y: -10, z: 40}, horizontalRotation: Math.PI, graphName: "FlurPfeil3"},
+          {position: { x: 20, y: -10, z: 60}, horizontalRotation: Math.PI, graphName: "FlurPfeil4"}
+        ],
         panes: [
-          { position: { x: 20, y: -10, z: 20}, verticalRotation: Math.PI / 6, horizontalRotation: Math.PI/4, sizefactor: 10, content: "/images/testbild.png"},
+          { position: { x: 0, y: 0, z: 0}, verticalRotation: Math.PI / 6, horizontalRotation: Math.PI/4, sizefactor: 10, content: "/images/testbild.png"},
         ],
         windowarcs: [
-          { position: { x: 0, y: 0, z: 0}, verticalRotation: 2, arcRadius: 10, arcHeight: 30, content: "/images/testbild.png"}
+          { position: { x: 0, y: 0, z: 0}, horizontalRotation: 0, arcRadius: 10, arcHeight: 30, content: "/images/testbild.png"}
         ]
       }
     },
@@ -121,6 +173,7 @@ export const FirstPersonControls = (speed) => {
     window.addEventListener('keyup', onKeyUp);
 
     const textureLoader = new THREE.TextureLoader();
+    const gltfloader = new GLTFLoader();
 
     // Add transparent boxes to visualize rooms and slopes
     rooms.forEach(room => {
@@ -163,10 +216,6 @@ export const FirstPersonControls = (speed) => {
       });
 
       // Add (interactable) elements to the scene
-      room.elements.arrows.forEach(() => {
-
-      });
-
       room.elements.panes.forEach((pane, index) => {
         textureLoader.load(pane.content, (texture) => {
           const aspectRatio = texture.image.width / texture.image.height;
@@ -192,7 +241,7 @@ export const FirstPersonControls = (speed) => {
         const arcGeometry = new THREE.CylinderGeometry(arc.arcRadius, arc.arcRadius, arc.arcHeight, 16, 1, true, 0, Math.PI);
         const arcMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide});
         const arcMesh = new THREE.Mesh(arcGeometry, arcMaterial);
-        arcMesh.rotation.y = arc.verticalRotation;
+        arcMesh.rotation.y = arc.horizontalRotation;
         arcMesh.position.set(
           room.minX + (room.maxX - room.minX) / 2 + arc.position.x,
           (room.minY + room.maxY) / 2 + arc.position.y,
@@ -201,7 +250,34 @@ export const FirstPersonControls = (speed) => {
         arcMesh.name = `arc-${room.minX}-${room.maxX}-${room.minZ}-${room.maxZ}-${index}`; // Naming panes to easily find them later
         scene.add(arcMesh);
       });
+
+
+      room.elements.arrows.forEach((arrow, index) => {
+        const mesh = gltfloader.load("/meshes/arrow.glb", function (gltf){
+          const arrowMesh = gltf.scene;
+          arrowMesh.rotation.y = 0;
+          arrowMesh.position.set(
+            room.minX + (room.maxX - room.minX) / 2 + arrow.position.x,
+            (room.minY + room.maxY) / 2 + arrow.position.y,
+            room.minZ + (room.maxZ - room.minZ) / 2 + arrow.position.z
+          );
+          const modelscale = 1;
+          arrowMesh.scale.set(modelscale, modelscale, modelscale);
+          arrowMesh.name = arrow.graphName; // Naming panes to easily find them later
+          scene.add(arrowMesh);
+          graph.addArrow(arrowMesh);
+        }, undefined, function (error) {
+          console.error('An error happened', error);
+        });
+      })
     });
+
+    //temporary location of Edges, TODO: move them to a better place when refractoring
+    graph.addEdge("Pfeil0", "Pfeil1");
+    graph.addEdge("Pfeil1", "Pfeil2");
+    graph.addEdge("Pfeil0", "Pfeil2");
+    graph.addEdge("Pfeil2", "Pfeil3");
+    graph.addEdge("Pfeil3", "Pfeil4");
 
     return () => {
       window.removeEventListener('keydown', onKeyDown);
