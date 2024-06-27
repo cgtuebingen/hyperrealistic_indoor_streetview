@@ -255,6 +255,12 @@ export const FirstPersonControls = (speed) => {
       room.elements.arrows.forEach((arrow, index) => {
         const mesh = gltfloader.load("/meshes/arrow.glb", function (gltf){
           const arrowMesh = gltf.scene;
+          const whiteTexture = new THREE.MeshBasicMaterial({ color: 0xffffff });
+          arrowMesh.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+              child.material = whiteTexture;
+            }
+          });
           arrowMesh.rotation.y = 0;
           arrowMesh.position.set(
             room.minX + (room.maxX - room.minX) / 2 + arrow.position.x,
