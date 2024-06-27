@@ -5,6 +5,7 @@ import {
     StatsGl
 } from '@react-three/drei';
 import { FirstPersonControls } from './FirstPersonControls.tsx'
+import TeleportControls from './TeleportControls.tsx';
 
 import { Splat } from './Splat.tsx';
 import { Leva, useControls } from 'leva';
@@ -16,6 +17,8 @@ const CanvasLayer = () => {
   const [isPointerLocked, setIsPointerLocked] = useState(true);
   const handleOverlayEnter = () => setIsPointerLocked(false);
   const handleOverlayLeave = () => setIsPointerLocked(true);
+
+  const teleportControlsRef = useRef();
 
   useEffect(() => {
     const checkFileExists = async () => {
@@ -43,17 +46,28 @@ const CanvasLayer = () => {
 
   const splatOptions = useControls('Admin Panel', options);
 
+  const handleTeleport = () => {
+    if (teleportControlsRef.current) {
+      // Test cooordinates
+      teleportControlsRef.current.teleport(1, 1, 1);
+    }
+  };
+
 
   return (
     <div className="absolute w-full h-full">
       <div onMouseEnter={handleOverlayEnter} onMouseLeave={handleOverlayLeave}>
         <Leva oneLineLabels />
+        <button onClick={handleTeleport} style={{ margin: '0px 450px', position: 'absolute', zIndex: 10 }}>
+          Teleport
+        </button>
       </div>
       <Canvas>
         <StatsGl />
         <ambientLight />
         <pointLight position={[0, 0, 0]} />
         <FirstPersonControls speed={splatOptions.speed} />
+        <TeleportControls ref={teleportControlsRef} />
         {isPointerLocked && <PointerLockControls />}
         {splatExists &&
         <Splat  position={[0, 2, 1]} src="splat.splat" /> }
