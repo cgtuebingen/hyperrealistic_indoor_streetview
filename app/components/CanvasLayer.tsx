@@ -49,7 +49,9 @@ const CanvasLayer = () => {
   const handleTeleport = () => {
     if (teleportControlsRef.current) {
       // Test cooordinates
-      teleportControlsRef.current.teleport(1, 1, 1);
+      // (posX, posY, posZ, lookAtX, lookAtY, lookAtZ)
+      teleportControlsRef.current.teleport(0, 0, 0, 0, 2, 1);
+      // here you teleprot to pos 0,0,0 and look at pos 0,2,1
     }
   };
 

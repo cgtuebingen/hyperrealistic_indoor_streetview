@@ -4,18 +4,24 @@ import { useThree, useFrame } from '@react-three/fiber';
 
 const TeleportControls = React.forwardRef((props, ref) => {
   const { camera } = useThree();
-  const [teleportPosition, setTeleportPosition] = useState<THREE.Vector3 | null>(null);
+  const [teleportData, setTeleportData] = useState<{
+    position: THREE.Vector3;
+    lookAt: THREE.Vector3;
+  } | null>(null);
 
   useImperativeHandle(ref, () => ({
-    teleport: (x, y, z) => {
-      setTeleportPosition(new THREE.Vector3(x, y, z));
+    teleport: (x, y, z, lookAtX, lookAtY, lookAtZ) => {
+      const position = new THREE.Vector3(x, y, z);
+      const lookAt = new THREE.Vector3(lookAtX, lookAtY, lookAtZ);
+      setTeleportData({ position, lookAt });
     }
   }));
 
   useFrame(() => {
-    if (teleportPosition) {
-      camera.position.copy(teleportPosition);
-      setTeleportPosition(null);
+    if (teleportData) {
+      camera.position.copy(teleportData.position);
+      camera.lookAt(teleportData.lookAt);
+      setTeleportData(null);
     }
   });
 
