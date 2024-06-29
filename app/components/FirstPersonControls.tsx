@@ -18,7 +18,7 @@ export const FirstPersonControls = (speed) => {
   const forward = new THREE.Vector3();
 
   // Desired height above the ground
-  const cameraHeight = 1.8;
+  const cameraHeight = 3;
 
   
   // temporary location for arrow graphs, TODO: move this outside of the controller  
@@ -28,8 +28,10 @@ export const FirstPersonControls = (speed) => {
     weight: number;
   }
   
+  type arrowWithNextArrow = [THREE.Object3D, THREE.Object3D| undefined];
+
   type arrowgraph = {
-    arrows: THREE.Object3D[];
+    arrows_nextarrows: arrowWithNextArrow[];
     edges: edge[];
   }
   
@@ -38,12 +40,12 @@ export const FirstPersonControls = (speed) => {
     private scene: THREE.Scene;
 
     constructor(scene: THREE.Scene) {
-      this.graph = { arrows: [], edges: [] };
+      this.graph = { arrows_nextarrows: [], edges: [] };
       this.scene = scene;
     }
   
     addArrow(arrow: THREE.Object3D): void{
-      this.graph.arrows.push(arrow);
+      this.graph.arrows_nextarrows.push([arrow, undefined]);
     }
   
     addEdge(arrow1name: string, arrow2name: string): void {
@@ -58,7 +60,26 @@ export const FirstPersonControls = (speed) => {
         this.graph.edges.push(newEdge);
       }
     }
-    updateArrowRotations(): void;
+
+    updateArrowGoal(arrowname: string): void {
+      this.graph.arrows_nextarrows.forEach((tuple) => {
+          tuple[1] = this.scene.getObjectByName(arrowname);
+      })
+    }
+
+    updateArrowRotations(): void {
+      this.graph.arrows_nextarrows.forEach((tuple) => {
+      console.log(tuple[0],"Put a message here.",tuple[1])
+        if(tuple[1]!= undefined){
+          if(tuple[0]!=tuple[1]){
+            const vectorToNextArrow = [tuple[0].position.x-tuple[1].position.x,tuple[0].position.z-tuple[1].position.z];
+            tuple[0].rotation.y = -Math.atan2(vectorToNextArrow[1],vectorToNextArrow[0]);
+          } else{
+            tuple[1].visible = false;
+          }
+        }
+      });
+    }
   }
 
   const graph = new ArrowGraph(scene);
@@ -77,8 +98,8 @@ export const FirstPersonControls = (speed) => {
           {position: { x: 20, y: -10, z: 20}, horizontalRotation: Math.PI, graphName: "Pfeil0"},
           {position: { x: 40, y: -10, z: 10}, horizontalRotation: Math.PI, graphName: "Pfeil1"},
           {position: { x: 0, y: -10, z: 0}, horizontalRotation: Math.PI, graphName: "Pfeil2"},
-          {position: { x: -10, y: -10, z: 40}, horizontalRotation: Math.PI, graphName: "FlurPfeil3"},
-          {position: { x: 20, y: -10, z: 60}, horizontalRotation: Math.PI, graphName: "FlurPfeil4"}
+          {position: { x: -10, y: -10, z: 40}, horizontalRotation: Math.PI, graphName: "Pfeil3"},
+          {position: { x: 20, y: -10, z: 60}, horizontalRotation: Math.PI, graphName: "Pfeil4"}
         ],
         panes: [
           { position: { x: 0, y: 0, z: 0}, verticalRotation: Math.PI / 6, horizontalRotation: Math.PI/4, sizefactor: 10, content: "/images/testbild.png"},
@@ -256,11 +277,6 @@ export const FirstPersonControls = (speed) => {
         const mesh = gltfloader.load("/meshes/arrow.glb", function (gltf){
           const arrowMesh = gltf.scene;
           const whiteTexture = new THREE.MeshBasicMaterial({ color: 0xffffff });
-          arrowMesh.traverse((child) => {
-            if (child instanceof THREE.Mesh) {
-              child.material = whiteTexture;
-            }
-          });
           arrowMesh.rotation.y = 0;
           arrowMesh.position.set(
             room.minX + (room.maxX - room.minX) / 2 + arrow.position.x,
@@ -334,6 +350,8 @@ export const FirstPersonControls = (speed) => {
     // detect if user is going into another room
     if (currentRoom && nextRoom && currentRoom !== nextRoom) {
       currentRoom = nextRoom;
+      graph.updateArrowGoal("Pfeil0");
+      graph.updateArrowRotations();
     }
 
     if (currentRoom) {
