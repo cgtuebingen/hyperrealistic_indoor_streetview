@@ -27,25 +27,30 @@ export const FirstPersonControls = (speed) => {
     arrow2: THREE.Object3D;
     weight: number;
   }
-  
-  type arrowWithNextArrow = [THREE.Object3D, THREE.Object3D| undefined];
 
   type arrowgraph = {
-    arrows_nextarrows: arrowWithNextArrow[];
+    arrows: THREE.Object3D[];
     edges: edge[];
+  }
+
+  type pathDraft = {
+    pathWeight: number;
+    pathArrows: THREE.Object3D[];
   }
   
   class ArrowGraph {
     private graph: arrowgraph;
+    private arrowsShortestPaths: (THREE.Object3D|undefined)[][];
     private scene: THREE.Scene;
 
     constructor(scene: THREE.Scene) {
-      this.graph = { arrows_nextarrows: [], edges: [] };
+      this.graph = { arrows: [], edges: [] };
+      this.arrowsShortestPaths = [];
       this.scene = scene;
     }
   
     addArrow(arrow: THREE.Object3D): void{
-      this.graph.arrows_nextarrows.push([arrow, undefined]);
+      this.graph.arrows.push(arrow);
     }
   
     addEdge(arrow1name: string, arrow2name: string): void {
@@ -61,24 +66,78 @@ export const FirstPersonControls = (speed) => {
       }
     }
 
-    updateArrowGoal(arrowname: string): void {
-      this.graph.arrows_nextarrows.forEach((tuple) => {
-          tuple[1] = this.scene.getObjectByName(arrowname);
-      })
-    }
+    // We define arrowsShortestPaths as a Matrix of Arrows:
+    // The next Arrow for the shortest path from arrow a to arrow b
+    // is accordingly saved in arrowsShortestPaths[aIndex][bIndex]
+    private findShortestPaths(): void {
+      const arrowCount = this.graph.arrows.length;
+      this.graph.arrows.forEach((startArrow, index) => {
+        let destinationArrows = [...this.graph.arrows];
+        let knownDestinationArrows = [startArrow]
+        destinationArrows.filter(arrow => !knownDestinationArrows.includes(arrow));
+        let distance = new Map<THREE.Object3D, number>();
+        let paths = new Map<THREE.Object3D, pathDraft>();
+        destinationArrows.forEach((arrowDestination) => {
+          distance.set(arrowDestination, Infinity);
+          paths.set(arrowDestination, {pathWeight: 0,
+                                       pathArrows: [startArrow]})
+        });
+        distance.set(startArrow, 0);
+        this.arrowsShortestPaths[index][index] = undefined;
+        let accessableEdges: edge[] = []
+        this.graph.edges.forEach(edge => {
+          if(edge.arrow1==startArrow){
+            accessableEdges.push(edge);
+            paths.get(edge.arrow2).pathWeight = edge.weight;
+            paths.get(edge.arrow2).pathArrows.push(edge.arrow1);
+          }
+          if(edge.arrow2==startArrow){
+            accessableEdges.push(edge);
+            paths.get(edge.arrow1).pathWeight = edge.weight;
+            paths.get(edge.arrow1).pathArrows.push(edge.arrow2);
+          }
+        });
+        while(destinationArrows.length!=0){
+          let lowestWeightPath: undefined|pathDraft = undefined;
+          let lowestWeightPathKey: undefined|THREE.Object3D = undefined;
+          for(let [key, value] of paths) {
+            if(lowestWeightPath==undefined || value.pathWeight<lowestWeightPath.pathWeight){
+              lowestWeightPath = value;
+              lowestWeightPathKey = key;
+            }
+          }
+          if (lowestWeightPath != undefined && lowestWeightPathKey != undefined){
+            distance.set(lowestWeightPathKey, lowestWeightPath.pathWeight);
+            this.arrowsShortestPaths[index][this.graph.arrows.indexOf(lowestWeightPathKey)] = lowestWeightPath.pathArrows[1];
 
-    updateArrowRotations(): void {
-      this.graph.arrows_nextarrows.forEach((tuple) => {
-      console.log(tuple[0],"Put a message here.",tuple[1])
-        if(tuple[1]!= undefined){
-          if(tuple[0]!=tuple[1]){
-            const vectorToNextArrow = [tuple[0].position.x-tuple[1].position.x,tuple[0].position.z-tuple[1].position.z];
-            tuple[0].rotation.y = -Math.atan2(vectorToNextArrow[1],vectorToNextArrow[0]);
-          } else{
-            tuple[1].visible = false;
           }
         }
+
       });
+    }
+
+    updateArrowRotations(destinationArrowName: string): void {
+      const destinationArrow = this.scene.getObjectByName(destinationArrowName);
+      if(destinationArrow!= undefined){
+        const destinationArrowIndex = this.graph.arrows.indexOf(destinationArrow);
+        if (this.arrowsShortestPaths.length==0){
+          this.findShortestPaths;
+        }
+        for(let arrowIndex = 0; arrowIndex < this.graph.arrows.length; arrowIndex++){
+          let arrow = this.graph.arrows[arrowIndex];
+          let arrowDestination = this.arrowsShortestPaths[arrowIndex][destinationArrowIndex];
+          if(arrow!= undefined){
+            if(arrowDestination != undefined){
+              arrow.visible = true;
+              let vectorToNextArrow = [arrow.position.x-arrowDestination.position.x,
+                                       arrow.position.z-arrowDestination.position.z];
+              arrow.rotation.y = -Math.atan2(vectorToNextArrow[1],vectorToNextArrow[0]);
+            } else {
+              arrow.visible = false;
+            } 
+          }
+        }
+      }
     }
   }
 
@@ -285,9 +344,10 @@ export const FirstPersonControls = (speed) => {
           );
           const modelscale = 1;
           arrowMesh.scale.set(modelscale, modelscale, modelscale);
+          arrowMesh.visible = false;
           arrowMesh.name = arrow.graphName; // Naming panes to easily find them later
-          scene.add(arrowMesh);
           graph.addArrow(arrowMesh);
+          scene.add(arrowMesh);
         }, undefined, function (error) {
           console.error('An error happened', error);
         });
@@ -350,8 +410,7 @@ export const FirstPersonControls = (speed) => {
     // detect if user is going into another room
     if (currentRoom && nextRoom && currentRoom !== nextRoom) {
       currentRoom = nextRoom;
-      graph.updateArrowGoal("Pfeil0");
-      graph.updateArrowRotations();
+      graph.updateArrowRotations("Pfeil0");
     }
 
     if (currentRoom) {
