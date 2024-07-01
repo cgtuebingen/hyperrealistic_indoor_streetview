@@ -66,75 +66,104 @@ export const FirstPersonControls = (speed) => {
       }
     }
 
-    // We define arrowsShortestPaths as a Matrix of Arrows:
-    // The next Arrow for the shortest path from arrow a to arrow b
-    // is accordingly saved in arrowsShortestPaths[aIndex][bIndex]
-    private findShortestPaths(): void {
+    public findShortestPaths(): void {
       const arrowCount = this.graph.arrows.length;
-      this.graph.arrows.forEach((startArrow, index) => {
-        let destinationArrows = [...this.graph.arrows];
-        let knownDestinationArrows = [startArrow]
-        destinationArrows.filter(arrow => !knownDestinationArrows.includes(arrow));
-        let distance = new Map<THREE.Object3D, number>();
-        let paths = new Map<THREE.Object3D, pathDraft>();
-        destinationArrows.forEach((arrowDestination) => {
-          distance.set(arrowDestination, Infinity);
-          paths.set(arrowDestination, {pathWeight: 0,
-                                       pathArrows: [startArrow]})
-        });
-        distance.set(startArrow, 0);
-        this.arrowsShortestPaths[index][index] = undefined;
-        let accessableEdges: edge[] = []
-        this.graph.edges.forEach(edge => {
-          if(edge.arrow1==startArrow){
-            accessableEdges.push(edge);
-            paths.get(edge.arrow2).pathWeight = edge.weight;
-            paths.get(edge.arrow2).pathArrows.push(edge.arrow1);
-          }
-          if(edge.arrow2==startArrow){
-            accessableEdges.push(edge);
-            paths.get(edge.arrow1).pathWeight = edge.weight;
-            paths.get(edge.arrow1).pathArrows.push(edge.arrow2);
-          }
-        });
-        while(destinationArrows.length!=0){
-          let lowestWeightPath: undefined|pathDraft = undefined;
-          let lowestWeightPathKey: undefined|THREE.Object3D = undefined;
-          for(let [key, value] of paths) {
-            if(lowestWeightPath==undefined || value.pathWeight<lowestWeightPath.pathWeight){
-              lowestWeightPath = value;
-              lowestWeightPathKey = key;
-            }
-          }
-          if (lowestWeightPath != undefined && lowestWeightPathKey != undefined){
-            distance.set(lowestWeightPathKey, lowestWeightPath.pathWeight);
-            this.arrowsShortestPaths[index][this.graph.arrows.indexOf(lowestWeightPathKey)] = lowestWeightPath.pathArrows[1];
+      this.arrowsShortestPaths = Array.from({ length: arrowCount }, () =>
+        Array(arrowCount).fill(undefined)
+      );
 
-          }
+      this.graph.arrows.forEach((startArrow, startIndex) => {
+        const distance = new Map<THREE.Object3D, number>();
+        const previous = new Map<THREE.Object3D, THREE.Object3D | undefined>();
+        const remaining = new Set<THREE.Object3D>();
+
+        this.graph.arrows.forEach(arrow => {
+          distance.set(arrow, Infinity);
+          previous.set(arrow, undefined);
+          remaining.add(arrow);
+        });
+
+        distance.set(startArrow, 0);
+
+        while (remaining.size > 0) {
+          let currentArrow: THREE.Object3D | undefined = undefined;
+          let minDistance = Infinity;
+
+          remaining.forEach(arrow => {
+            const dist = distance.get(arrow)!;
+            if (dist < minDistance) {
+              minDistance = dist;
+              currentArrow = arrow;
+            }
+          });
+
+          if (currentArrow === undefined) break;
+          remaining.delete(currentArrow);
+
+          this.graph.edges.forEach(edge => {
+            let neighbor: THREE.Object3D | undefined = undefined;
+            if (edge.arrow1.name == currentArrow.name) {
+              neighbor = edge.arrow2;
+            } else if (edge.arrow2.name == currentArrow.name) {
+              neighbor = edge.arrow1;
+            }
+
+            if (neighbor) {
+              remaining.forEach(arrow => {
+                if (arrow.name == neighbor.name) {
+                  const alt = distance.get(currentArrow) + edge.weight;
+                  for (let [key, value] of distance) {
+                    if (key.name == neighbor.name) {
+                      if (alt < value) {
+                        distance.delete(key);
+                        distance.set(neighbor, alt);
+                        previous.delete(key);
+                        previous.set(neighbor, currentArrow);
+                      }
+                    }
+                  }
+                }
+              })
+            }
+          });
         }
 
+        this.graph.arrows.forEach((endArrow, endIndex) => {
+          if (startArrow !== endArrow) {
+            for (let [nextArrow, value] of previous){
+              if (nextArrow.name == endArrow.name){
+                while (nextArrow !== undefined && previous.get(nextArrow) !== startArrow) {
+                  nextArrow = previous.get(nextArrow);
+                }
+                this.arrowsShortestPaths[startIndex][endIndex] = nextArrow;
+              }
+            }
+          }
+        });
       });
     }
 
     updateArrowRotations(destinationArrowName: string): void {
       const destinationArrow = this.scene.getObjectByName(destinationArrowName);
-      if(destinationArrow!= undefined){
-        const destinationArrowIndex = this.graph.arrows.indexOf(destinationArrow);
-        if (this.arrowsShortestPaths.length==0){
-          this.findShortestPaths;
+      if (destinationArrow !== undefined) {
+        const destinationArrowIndex = this.graph.arrows.findIndex(obj => obj.name == destinationArrow.name);
+        if (this.arrowsShortestPaths.length === 0) {
+          console.log("initial arrow setup");
+          this.findShortestPaths();
         }
-        for(let arrowIndex = 0; arrowIndex < this.graph.arrows.length; arrowIndex++){
+        console.log(this.arrowsShortestPaths);
+        for (let arrowIndex = 0; arrowIndex < this.graph.arrows.length; arrowIndex++) {
           let arrow = this.graph.arrows[arrowIndex];
           let arrowDestination = this.arrowsShortestPaths[arrowIndex][destinationArrowIndex];
-          if(arrow!= undefined){
-            if(arrowDestination != undefined){
+          if (arrow != undefined) {
+            if (arrowDestination != undefined) {
               arrow.visible = true;
-              let vectorToNextArrow = [arrow.position.x-arrowDestination.position.x,
-                                       arrow.position.z-arrowDestination.position.z];
-              arrow.rotation.y = -Math.atan2(vectorToNextArrow[1],vectorToNextArrow[0]);
-            } else {
-              arrow.visible = false;
+              let vectorToNextArrow = [arrow.position.x - arrowDestination.position.x,
+              arrow.position.z - arrowDestination.position.z];
+              arrow.rotation.y = -Math.atan2(vectorToNextArrow[1], vectorToNextArrow[0]);
             } 
+          } else {
+            arrow.visible = false;
           }
         }
       }
@@ -410,7 +439,7 @@ export const FirstPersonControls = (speed) => {
     // detect if user is going into another room
     if (currentRoom && nextRoom && currentRoom !== nextRoom) {
       currentRoom = nextRoom;
-      graph.updateArrowRotations("Pfeil0");
+      graph.updateArrowRotations("Pfeil4");
     }
 
     if (currentRoom) {
