@@ -1,0 +1,8 @@
+version: '3'
+services:
+  hisv:
+    image: fabiuni/teamprojekt
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./public:/home/hisv/public
