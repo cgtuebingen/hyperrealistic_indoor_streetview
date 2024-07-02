@@ -255,14 +255,12 @@ export const FirstPersonControls = (speed) => {
           break;
         case 'KeyE':
         case 'Space':
-          graph.updateArrowRotations("P5");
           moveUp.current = true;
           break;
         case 'KeyQ':
         case 'ShiftLeft':
         case 'ShiftRight':
           moveDown.current = true;
-          graph.updateArrowRotations("P0");
           break;
       }
     };
