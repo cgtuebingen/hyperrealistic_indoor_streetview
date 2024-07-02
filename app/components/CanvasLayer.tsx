@@ -41,6 +41,7 @@ const CanvasLayer = () => {
   const options = useMemo(() => {
     return {
       speed: { value: 100, min: 1, max: 500, step: 10 },
+      debug: false,
     }
   }, [])
 
@@ -122,7 +123,7 @@ const CanvasLayer = () => {
         <ambientLight />
         <pointLight position={[0, 0, 0]} />
         <FirstPersonControls speed={splatOptions.speed} rooms={roomConfig} />
-        <UserInterfaceRenderer rooms={roomConfig} />
+        <UserInterfaceRenderer rooms={roomConfig} debug={splatOptions.debug}/>
         <TeleportControls ref={teleportControlsRef} />
         {isPointerLocked && <PointerLockControls />}
         {splatExists &&

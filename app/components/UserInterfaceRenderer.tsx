@@ -3,7 +3,7 @@ import { useThree, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-export const UserInterfaceRenderer = ({rooms}) => {
+export const UserInterfaceRenderer = ({rooms, debug}) => {
   const { camera, scene } = useThree();
 
   type edge = {
@@ -165,6 +165,77 @@ export const UserInterfaceRenderer = ({rooms}) => {
   const graph = new ArrowGraph(scene);
 
 
+  function drawRoomGeometry(): void {
+      if(!debug) {
+        return
+      }
+
+      rooms.forEach(room => {
+        const roomGeometry = new THREE.BoxGeometry(
+          room.maxX - room.minX,
+          room.maxY - room.minY,
+          room.maxZ - room.minZ
+        );
+        const roomMaterial = new THREE.MeshBasicMaterial({
+          color: 0x00ff00,
+          transparent: true,
+          opacity: 0.25,
+          wireframe: true
+        });
+        const roomBox = new THREE.Mesh(roomGeometry, roomMaterial);
+        roomBox.position.set(
+          (room.minX + room.maxX) / 2,
+          (room.minY + room.maxY) / 2,
+          (room.minZ + room.maxZ) / 2
+        );
+        scene.add(roomBox);
+
+        room.objects.forEach(object => {
+
+            const objectGeometry = new THREE.BoxGeometry(
+              object.maxX - object.minX,
+              object.maxY - object.minY,
+              object.maxZ - object.minZ
+            );
+            const objectMaterial = new THREE.MeshBasicMaterial({
+              color: 0xff0000,
+              transparent: true,
+              opacity: 0.25,
+              wireframe: true
+            });
+            const objectBox = new THREE.Mesh(objectGeometry, objectMaterial);
+            objectBox.position.set(
+              (room.minX + object.minX - room.maxX + object.maxX) / 2,
+              (room.minY + object.minY - room.maxY + object.maxY) / 2,
+              (room.minZ + object.minZ - room.maxZ + object.maxZ) / 2
+            );
+            objectBox.name = `object-${room.minX}-${room.maxX}-${room.minZ}-${room.maxZ}`;
+            scene.add(objectBox);
+          });
+
+        // Add slopes to the scene
+        room.slopes.forEach((slope, index) => {
+          const slopeGeometry = new THREE.PlaneGeometry(slope.width, slope.length);
+          const slopeMaterial = new THREE.MeshBasicMaterial({
+            color: 0xcccccc,
+            side: THREE.DoubleSide,
+            wireframe: true
+          });
+          const slopeMesh = new THREE.Mesh(slopeGeometry, slopeMaterial);
+          slopeMesh.rotation.x = -slope.angle;
+          slopeMesh.position.set(
+            room.minX + (room.maxX - room.minX) / 2 + slope.position.x,
+            (room.minY + room.maxY) / 2 + slope.position.y,
+            room.minZ + (room.maxZ - room.minZ) / 2 + slope.position.z
+          );
+          slopeMesh.name = `slope-${room.minX}-${room.maxX}-${room.minZ}-${room.maxZ}-${index}`;
+          scene.add(slopeMesh);
+        });
+
+    })
+  }
+
+
   // for debugging purposes
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -182,68 +253,10 @@ export const UserInterfaceRenderer = ({rooms}) => {
     const gltfloader = new GLTFLoader();
 
     // Add transparent boxes to visualize rooms and slopes
+    drawRoomGeometry();
+
+    // draw the rest of the UI (arrows, planes etc.)
     rooms.forEach(room => {
-      const roomGeometry = new THREE.BoxGeometry(
-        room.maxX - room.minX,
-        room.maxY - room.minY,
-        room.maxZ - room.minZ
-      );
-      const roomMaterial = new THREE.MeshBasicMaterial({
-        color: 0x00ff00,
-        transparent: true,
-        opacity: 0.25,
-        wireframe: true
-      });
-      const roomBox = new THREE.Mesh(roomGeometry, roomMaterial);
-      roomBox.position.set(
-        (room.minX + room.maxX) / 2,
-        (room.minY + room.maxY) / 2,
-        (room.minZ + room.maxZ) / 2
-      );
-      scene.add(roomBox);
-
-      room.objects.forEach(object => {
-
-          const objectGeometry = new THREE.BoxGeometry(
-            object.maxX - object.minX,
-            object.maxY - object.minY,
-            object.maxZ - object.minZ
-          );
-          const objectMaterial = new THREE.MeshBasicMaterial({
-            color: 0xff0000,
-            transparent: true,
-            opacity: 0.25,
-            wireframe: true
-          });
-          const objectBox = new THREE.Mesh(objectGeometry, objectMaterial);
-          objectBox.position.set(
-            (room.minX + object.minX - room.maxX + object.maxX) / 2,
-            (room.minY + object.minY - room.maxY + object.maxY) / 2,
-            (room.minZ + object.minZ - room.maxZ + object.maxZ) / 2
-          );
-          objectBox.name = `object-${room.minX}-${room.maxX}-${room.minZ}-${room.maxZ}`;
-          scene.add(objectBox);
-        });
-
-      // Add slopes to the scene
-      room.slopes.forEach((slope, index) => {
-        const slopeGeometry = new THREE.PlaneGeometry(slope.width, slope.length);
-        const slopeMaterial = new THREE.MeshBasicMaterial({
-          color: 0xcccccc,
-          side: THREE.DoubleSide,
-          wireframe: true
-        });
-        const slopeMesh = new THREE.Mesh(slopeGeometry, slopeMaterial);
-        slopeMesh.rotation.x = -slope.angle;
-        slopeMesh.position.set(
-          room.minX + (room.maxX - room.minX) / 2 + slope.position.x,
-          (room.minY + room.maxY) / 2 + slope.position.y,
-          room.minZ + (room.maxZ - room.minZ) / 2 + slope.position.z
-        );
-        slopeMesh.name = `slope-${room.minX}-${room.maxX}-${room.minZ}-${room.maxZ}-${index}`;
-        scene.add(slopeMesh);
-      });
-
       // Add (interactable) elements to the scene
       room.elements.panes.forEach((pane, index) => {
         textureLoader.load(pane.content, (texture) => {
