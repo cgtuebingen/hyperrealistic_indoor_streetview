@@ -5,8 +5,8 @@ import {
     StatsGl
 } from '@react-three/drei';
 import { FirstPersonControls } from './FirstPersonControls.tsx'
-import TeleportControls from './TeleportControls.tsx';
-
+import { TeleportControls } from './TeleportControls.tsx';
+import { UserInterfaceRenderer } from './UserInterfaceRenderer.tsx';
 import { Splat } from './Splat.tsx';
 import { Leva, useControls } from 'leva';
 import { useMemo } from 'react'
@@ -55,6 +55,59 @@ const CanvasLayer = () => {
     }
   };
 
+    // temporary location for rooms
+    const roomConfig = [
+      {
+        minX: -50, maxX: 50, minY: 0, maxY: 20, minZ: -50, maxZ: 50,
+        slopes: [
+          { angle: Math.PI / 3 , position: { x: 0, y: 0, z: 0 }, width: 10 },
+          { angle: Math.PI / 3, position: { x: 10, y: 0, z: 0 }, width: 10 }
+        ],
+        objects: [
+          { minX: 10, maxX: 15, minY: 0, maxY: 15, minZ: 10, maxZ: 15 }
+        ],
+        elements: {
+          arrows: [],
+          panes: [
+            { position: { x: -40, y: -5, z: -40}, verticalRotation: Math.PI / 6, horizontalRotation: Math.PI/4, sizefactor: 10, content: "/images/testbild.png"},
+          ],
+          windowarcs: [
+            { position: { x: 40, y: 0, z: -40}, horizontalRotation: Math.PI / 4, arcRadius: 10, arcHeight: 20, content: "/images/testbild.png"}
+          ]
+        }
+      },
+      {
+        minX: 50, maxX: 60, minY: 0, maxY: 10, minZ: 0, maxZ: 10,
+        slopes: [
+          { angle: Math.PI / 2, position: { x: 10, y: 5, z: 5 }, width: 5, length: 10 },
+          { angle: Math.PI / 3, position: { x: 0, y: 0, z: 0 }, width: 10, length: 50 },
+          { angle: Math.PI / 3, position: { x: 10, y: 5, z: 5 }, width: 5, length: 50 }
+
+          ],
+        objects: [],
+        elements: {
+          arrows: [],
+          panes: [],
+          windowarcs: []
+        }
+      },
+      {
+        minX: 60, maxX: 160, minY: 0, maxY: 20, minZ: -50, maxZ: 50,
+        slopes: [],
+        objects: [],
+        elements: {
+          arrows: [
+            { position: { x: 0, y: -10, z: 0 }, graphName: "P0" },
+            { position: { x: 0, y: -10, z: -20 }, graphName: "P1" },
+            { position: { x: 0, y: -10, z: -40 }, graphName: "P2" },
+            { position: { x: 15, y: -10, z: -20 }, graphName: "P3" },
+            { position: { x: 35, y: -10, z: -40 }, graphName: "P4" },
+            { position: { x: 0, y: -10, z: -55 }, graphName: "P5" }],
+          panes: [],
+          windowarcs: []
+        }
+      },
+    ];
 
   return (
     <div className="absolute w-full h-full">
@@ -68,7 +121,8 @@ const CanvasLayer = () => {
         <StatsGl />
         <ambientLight />
         <pointLight position={[0, 0, 0]} />
-        <FirstPersonControls speed={splatOptions.speed} />
+        <FirstPersonControls speed={splatOptions.speed} rooms={roomConfig} />
+        <UserInterfaceRenderer rooms={roomConfig} />
         <TeleportControls ref={teleportControlsRef} />
         {isPointerLocked && <PointerLockControls />}
         {splatExists &&
