@@ -45,7 +45,6 @@ export const FirstPersonControls = ({ speed, rooms }) => {
         case 'ShiftLeft':
         case 'ShiftRight':
           moveDown.current = true;
-          graph.updateArrowRotations("P3");
           break;
 
       }
