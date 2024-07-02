@@ -20,6 +20,14 @@ const CanvasLayer = () => {
 
   const teleportControlsRef = useRef();
 
+  const [currentRoom, setCurrentRoom] = useState('');
+
+  const updateCurrentRoom = (newRoom) => {
+    setCurrentRoom(newRoom);
+  }
+
+
+
   useEffect(() => {
     const checkFileExists = async () => {
       try {
@@ -122,7 +130,7 @@ const CanvasLayer = () => {
         <StatsGl />
         <ambientLight />
         <pointLight position={[0, 0, 0]} />
-        <FirstPersonControls speed={splatOptions.speed} rooms={roomConfig} />
+        <FirstPersonControls speed={splatOptions.speed} rooms={roomConfig} updateCurrentRoom={updateCurrentRoom}/>
         <UserInterfaceRenderer rooms={roomConfig} debug={splatOptions.debug}/>
         <TeleportControls ref={teleportControlsRef} />
         {isPointerLocked && <PointerLockControls />}

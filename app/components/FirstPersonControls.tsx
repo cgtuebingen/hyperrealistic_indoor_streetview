@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-export const FirstPersonControls = ({ speed, rooms }) => {
+export const FirstPersonControls = ({ speed, rooms, updateCurrentRoom }) => {
   const { camera, scene } = useThree();
   const moveForward = useRef(false);
   const moveBackward = useRef(false);
@@ -46,7 +46,6 @@ export const FirstPersonControls = ({ speed, rooms }) => {
         case 'ShiftRight':
           moveDown.current = true;
           break;
-
       }
     };
 
@@ -121,6 +120,8 @@ export const FirstPersonControls = ({ speed, rooms }) => {
       camera.position.y >= room.minY && camera.position.y <= room.maxY &&
       camera.position.z >= room.minZ && camera.position.z <= room.maxZ
     );
+
+    updateCurrentRoom(currentRoom);
 
     // find the room the user might be going into
     const nextRoom = rooms.find(room =>
