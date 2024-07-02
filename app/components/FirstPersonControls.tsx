@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { sqrt } from 'three/examples/jsm/nodes/Nodes.js';
 
 export const FirstPersonControls = (speed) => {
   const { camera, scene } = useThree();
@@ -18,7 +17,7 @@ export const FirstPersonControls = (speed) => {
   const forward = new THREE.Vector3();
 
   // Desired height above the ground
-  const cameraHeight = 3;
+  const cameraHeight = 5;
 
   
   // temporary location for arrow graphs, TODO: move this outside of the controller  
@@ -31,11 +30,6 @@ export const FirstPersonControls = (speed) => {
   type arrowgraph = {
     arrows: THREE.Object3D[];
     edges: edge[];
-  }
-
-  type pathDraft = {
-    pathWeight: number;
-    pathArrows: THREE.Object3D[];
   }
   
   class ArrowGraph {
@@ -74,12 +68,12 @@ export const FirstPersonControls = (speed) => {
 
       this.graph.arrows.forEach((startArrow, startIndex) => {
         const distance = new Map<THREE.Object3D, number>();
-        const previous = new Map<THREE.Object3D, THREE.Object3D | undefined>();
+        const previous = new Map<THREE.Object3D, THREE.Object3D[]>();
         const remaining = new Set<THREE.Object3D>();
 
         this.graph.arrows.forEach(arrow => {
           distance.set(arrow, Infinity);
-          previous.set(arrow, undefined);
+          previous.set(arrow, []);
           remaining.add(arrow);
         });
 
@@ -90,10 +84,13 @@ export const FirstPersonControls = (speed) => {
           let minDistance = Infinity;
 
           remaining.forEach(arrow => {
-            const dist = distance.get(arrow)!;
-            if (dist < minDistance) {
-              minDistance = dist;
-              currentArrow = arrow;
+            for (let [key, value] of distance) {
+              if (key.name == arrow.name) {
+                if (value < minDistance) {
+                  minDistance = value;
+                  currentArrow = arrow;
+                }
+              }
             }
           });
 
@@ -111,14 +108,27 @@ export const FirstPersonControls = (speed) => {
             if (neighbor) {
               remaining.forEach(arrow => {
                 if (arrow.name == neighbor.name) {
-                  const alt = distance.get(currentArrow) + edge.weight;
+                  let distanceCurrentArrow = Infinity;
+                  for (let [key, value] of distance) {
+                    if (key.name == currentArrow.name){
+                      distanceCurrentArrow = value;
+                    }
+                  }
                   for (let [key, value] of distance) {
                     if (key.name == neighbor.name) {
+                      const alt = distanceCurrentArrow + edge.weight;
                       if (alt < value) {
                         distance.delete(key);
                         distance.set(neighbor, alt);
                         previous.delete(key);
-                        previous.set(neighbor, currentArrow);
+                        let currentArrowPrevious;
+                        for (let [key, value] of previous) {
+                          if (key.name == currentArrow.name){
+                            currentArrowPrevious = value;
+                          }
+                        }
+                        previous.set(neighbor, [...currentArrowPrevious]);
+                        previous.get(neighbor).push(currentArrow);
                       }
                     }
                   }
@@ -132,9 +142,8 @@ export const FirstPersonControls = (speed) => {
           if (startArrow !== endArrow) {
             for (let [nextArrow, value] of previous){
               if (nextArrow.name == endArrow.name){
-                while (nextArrow !== undefined && previous.get(nextArrow) !== startArrow) {
-                  nextArrow = previous.get(nextArrow);
-                }
+                value.push(endArrow);
+                nextArrow = value[1];
                 this.arrowsShortestPaths[startIndex][endIndex] = nextArrow;
               }
             }
@@ -148,10 +157,8 @@ export const FirstPersonControls = (speed) => {
       if (destinationArrow !== undefined) {
         const destinationArrowIndex = this.graph.arrows.findIndex(obj => obj.name == destinationArrow.name);
         if (this.arrowsShortestPaths.length === 0) {
-          console.log("initial arrow setup");
           this.findShortestPaths();
         }
-        console.log(this.arrowsShortestPaths);
         for (let arrowIndex = 0; arrowIndex < this.graph.arrows.length; arrowIndex++) {
           let arrow = this.graph.arrows[arrowIndex];
           let arrowDestination = this.arrowsShortestPaths[arrowIndex][destinationArrowIndex];
@@ -161,9 +168,9 @@ export const FirstPersonControls = (speed) => {
               let vectorToNextArrow = [arrow.position.x - arrowDestination.position.x,
               arrow.position.z - arrowDestination.position.z];
               arrow.rotation.y = -Math.atan2(vectorToNextArrow[1], vectorToNextArrow[0]);
-            } 
-          } else {
-            arrow.visible = false;
+            } else {
+              arrow.visible = false;
+            }
           }
         }
       }
@@ -182,18 +189,12 @@ export const FirstPersonControls = (speed) => {
         { angle: Math.PI / 3, position: { x: 10, y: 0, z: 0 }, width: 10 }
       ],
       elements: {
-        arrows: [
-          {position: { x: 20, y: -10, z: 20}, horizontalRotation: Math.PI, graphName: "Pfeil0"},
-          {position: { x: 40, y: -10, z: 10}, horizontalRotation: Math.PI, graphName: "Pfeil1"},
-          {position: { x: 0, y: -10, z: 0}, horizontalRotation: Math.PI, graphName: "Pfeil2"},
-          {position: { x: -10, y: -10, z: 40}, horizontalRotation: Math.PI, graphName: "Pfeil3"},
-          {position: { x: 20, y: -10, z: 60}, horizontalRotation: Math.PI, graphName: "Pfeil4"}
-        ],
+        arrows: [],
         panes: [
-          { position: { x: 0, y: 0, z: 0}, verticalRotation: Math.PI / 6, horizontalRotation: Math.PI/4, sizefactor: 10, content: "/images/testbild.png"},
+          { position: { x: -40, y: -5, z: -40}, verticalRotation: Math.PI / 6, horizontalRotation: Math.PI/4, sizefactor: 10, content: "/images/testbild.png"},
         ],
         windowarcs: [
-          { position: { x: 0, y: 0, z: 0}, horizontalRotation: 0, arcRadius: 10, arcHeight: 30, content: "/images/testbild.png"}
+          { position: { x: 40, y: 0, z: -40}, horizontalRotation: Math.PI / 4, arcRadius: 10, arcHeight: 20, content: "/images/testbild.png"}
         ]
       }
     },
@@ -210,7 +211,13 @@ export const FirstPersonControls = (speed) => {
       minX: 60, maxX: 160, minY: 0, maxY: 20, minZ: -50, maxZ: 50,
       slopes: [],
       elements: {
-        arrows: [],
+        arrows: [
+          { position: { x: 0, y: -10, z: 0 }, graphName: "P0" },
+          { position: { x: 0, y: -10, z: -20 }, graphName: "P1" },
+          { position: { x: 0, y: -10, z: -40 }, graphName: "P2" },
+          { position: { x: 15, y: -10, z: -20 }, graphName: "P3" },
+          { position: { x: 35, y: -10, z: -40 }, graphName: "P4" },
+          { position: { x: 0, y: -10, z: -55 }, graphName: "P5" }],
         panes: [],
         windowarcs: []
       }
@@ -244,6 +251,7 @@ export const FirstPersonControls = (speed) => {
         case 'ShiftLeft':
         case 'ShiftRight':
           moveDown.current = true;
+          graph.updateArrowRotations("P0")
           break;
       }
     };
@@ -371,7 +379,7 @@ export const FirstPersonControls = (speed) => {
             (room.minY + room.maxY) / 2 + arrow.position.y,
             room.minZ + (room.maxZ - room.minZ) / 2 + arrow.position.z
           );
-          const modelscale = 1;
+          const modelscale = 2;
           arrowMesh.scale.set(modelscale, modelscale, modelscale);
           arrowMesh.visible = false;
           arrowMesh.name = arrow.graphName; // Naming panes to easily find them later
@@ -384,11 +392,13 @@ export const FirstPersonControls = (speed) => {
     });
 
     //temporary location of Edges, TODO: move them to a better place when refractoring
-    graph.addEdge("Pfeil0", "Pfeil1");
-    graph.addEdge("Pfeil1", "Pfeil2");
-    graph.addEdge("Pfeil0", "Pfeil2");
-    graph.addEdge("Pfeil2", "Pfeil3");
-    graph.addEdge("Pfeil3", "Pfeil4");
+    graph.addEdge("P0", "P1");
+    graph.addEdge("P1", "P2");
+    graph.addEdge("P1", "P3");
+    graph.addEdge("P2", "P3");
+    graph.addEdge("P2", "P5");
+    graph.addEdge("P3", "P4");
+    graph.addEdge("P4", "P5");
 
     return () => {
       window.removeEventListener('keydown', onKeyDown);
@@ -439,7 +449,6 @@ export const FirstPersonControls = (speed) => {
     // detect if user is going into another room
     if (currentRoom && nextRoom && currentRoom !== nextRoom) {
       currentRoom = nextRoom;
-      graph.updateArrowRotations("Pfeil4");
     }
 
     if (currentRoom) {
