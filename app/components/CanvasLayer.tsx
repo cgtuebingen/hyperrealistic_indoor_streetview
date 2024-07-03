@@ -21,12 +21,27 @@ const CanvasLayer = () => {
   const teleportControlsRef = useRef();
 
   const [currentRoom, setCurrentRoom] = useState('');
+  const [currentSplats, setCurrentSplats] = useState([]);
+  const [currentKey, setCurrentKey] = useState('');
 
   const updateCurrentRoom = (newRoom) => {
+    if(currentRoom == newRoom || newRoom == '' || newRoom == undefined) {
+        return;
+    }
     setCurrentRoom(newRoom);
+    // get adjacent splats from currentRoom
+    if(newRoom.adjacent.length == 0) {
+      setCurrentSplats(newRoom.splat);
+    } else {
+      setCurrentSplats([...newRoom.adjacent.map(adjacentName => {
+        const adjacentRoom = roomConfig.find(room => room.name === adjacentName);
+        return adjacentRoom ? adjacentRoom.splat : null;
+      }).filter(splat => splat !== null), newRoom.splat]);
+    }
+    console.log(newRoom);
+    console.log(currentSplats);
+    setCurrentKey(`${newRoom.name}${newRoom.adjacent.join('')}`)
   }
-
-
 
   useEffect(() => {
     const checkFileExists = async () => {
@@ -45,7 +60,6 @@ const CanvasLayer = () => {
     checkFileExists();
   }, []);
 
-
   const options = useMemo(() => {
     return {
       speed: { value: 100, min: 1, max: 500, step: 10 },
@@ -57,24 +71,22 @@ const CanvasLayer = () => {
 
   const handleTeleport = () => {
     if (teleportControlsRef.current) {
-      // Test cooordinates
+      // Test coordinates
       // (posX, posY, posZ, lookAtX, lookAtY, lookAtZ)
       teleportControlsRef.current.teleport(0, 0, 0, 0, 2, 1);
-      // here you teleprot to pos 0,0,0 and look at pos 0,2,1
+      // here you teleport to pos 0,0,0 and look at pos 0,2,1
     }
   };
 
-    // temporary location for rooms
-    const roomConfig = [
+  // temporary location for rooms
+  const roomConfig = [
       {
-        minX: -50, maxX: 50, minY: 0, maxY: 20, minZ: -50, maxZ: 50,
-        slopes: [
-          { angle: Math.PI / 3 , position: { x: 0, y: 0, z: 0 }, width: 10 },
-          { angle: Math.PI / 3, position: { x: 10, y: 0, z: 0 }, width: 10 }
-        ],
-        objects: [
-          { minX: 10, maxX: 15, minY: 0, maxY: 15, minZ: 10, maxZ: 15 }
-        ],
+        splat: "nuke_2.splat",
+        name: "raum2",
+        adjacent: ["raum1"],
+        minX: -2, maxX: 1, minY: 0, maxY: 5, minZ: 5, maxZ: 5.65,
+        slopes: [],
+        objects: [],
         elements: {
           arrows: [],
           panes: [
@@ -86,38 +98,19 @@ const CanvasLayer = () => {
         }
       },
       {
-        minX: 50, maxX: 60, minY: 0, maxY: 10, minZ: 0, maxZ: 10,
-        slopes: [
-          { angle: Math.PI / 2, position: { x: 10, y: 5, z: 5 }, width: 5, length: 10 },
-          { angle: Math.PI / 3, position: { x: 0, y: 0, z: 0 }, width: 10, length: 50 },
-          { angle: Math.PI / 3, position: { x: 10, y: 5, z: 5 }, width: 5, length: 50 }
-
-          ],
+        splat: "nuke_1.splat",
+        name: "raum1",
+        adjacent: [],
+        minX: -2, maxX: 1, minY: 0, maxY: 5, minZ: 2, maxZ: 5,
+        slopes: [],
         objects: [],
         elements: {
           arrows: [],
           panes: [],
           windowarcs: []
         }
-      },
-      {
-        minX: 60, maxX: 160, minY: 0, maxY: 20, minZ: -50, maxZ: 50,
-        slopes: [],
-        objects: [],
-        elements: {
-          arrows: [
-            { position: { x: 0, y: -10, z: 0 }, graphName: "P0" },
-            { position: { x: 0, y: -10, z: -20 }, graphName: "P1" },
-            { position: { x: 0, y: -10, z: -40 }, graphName: "P2" },
-            { position: { x: 15, y: -10, z: -20 }, graphName: "P3" },
-            { position: { x: 35, y: -10, z: -40 }, graphName: "P4" },
-            { position: { x: 0, y: -10, z: -55 }, graphName: "P5" }],
-          panes: [],
-          windowarcs: []
-        }
-      },
-    ];
-
+      }
+  ];
   return (
     <div className="absolute w-full h-full">
       <div onMouseEnter={handleOverlayEnter} onMouseLeave={handleOverlayLeave}>
@@ -134,12 +127,7 @@ const CanvasLayer = () => {
         <UserInterfaceRenderer rooms={roomConfig} debug={splatOptions.debug}/>
         <TeleportControls ref={teleportControlsRef} />
         {isPointerLocked && <PointerLockControls />}
-        {splatExists &&
-        <Splat  position={[0, 2, 1]} src="splat.splat" /> }
-        {!splatExists &&
-        <Splat
-        position={[0, 2, 1]}
-        src="https://huggingface.co/cakewalk/splat-data/resolve/main/nike.splat" />}
+        {currentSplats.length > 0 && <Splat position={[0, 0, 5]} src={currentSplats} key={currentKey} />}
       </Canvas>
     </div>
   );

@@ -16,7 +16,7 @@ export const FirstPersonControls = ({ speed, rooms, updateCurrentRoom }) => {
   const forward = new THREE.Vector3();
 
   // Desired height above the ground
-  const cameraHeight = 5;
+  const cameraHeight = 0.13;
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -89,7 +89,8 @@ export const FirstPersonControls = ({ speed, rooms, updateCurrentRoom }) => {
   }, [rooms, scene]);
 
   useFrame((_, delta) => {
-    const movementSpeed = speed.speed ?? 300;
+
+    const movementSpeed = speed ?? 300;
 
     // Get the camera's forward and left direction
     camera.getWorldDirection(forward);
@@ -120,6 +121,10 @@ export const FirstPersonControls = ({ speed, rooms, updateCurrentRoom }) => {
       camera.position.y >= room.minY && camera.position.y <= room.maxY &&
       camera.position.z >= room.minZ && camera.position.z <= room.maxZ
     );
+
+    if(currentRoom == null || currentRoom == undefined) {
+      return;
+    }
 
     updateCurrentRoom(currentRoom);
 
