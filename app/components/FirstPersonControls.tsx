@@ -16,7 +16,7 @@ export const FirstPersonControls = ({ speed, rooms, updateCurrentRoom }) => {
   const forward = new THREE.Vector3();
 
   // Desired height above the ground
-  const cameraHeight = 0.13;
+  const cameraHeight = 0.5;
 
   useEffect(() => {
     const onKeyDown = (event) => {

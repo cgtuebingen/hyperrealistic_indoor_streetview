@@ -25,6 +25,7 @@ const CanvasLayer = () => {
   const [currentKey, setCurrentKey] = useState('');
 
   const updateCurrentRoom = (newRoom) => {
+
     if(currentRoom == newRoom || newRoom == '' || newRoom == undefined) {
         return;
     }
@@ -38,8 +39,6 @@ const CanvasLayer = () => {
         return adjacentRoom ? adjacentRoom.splat : null;
       }).filter(splat => splat !== null), newRoom.splat]);
     }
-    console.log(newRoom);
-    console.log(currentSplats);
     setCurrentKey(`${newRoom.name}${newRoom.adjacent.join('')}`)
   }
 
@@ -73,7 +72,7 @@ const CanvasLayer = () => {
     if (teleportControlsRef.current) {
       // Test coordinates
       // (posX, posY, posZ, lookAtX, lookAtY, lookAtZ)
-      teleportControlsRef.current.teleport(0, 0, 0, 0, 2, 1);
+      teleportControlsRef.current.teleport(0, 0, 5.3, 0, 1, 1);
       // here you teleport to pos 0,0,0 and look at pos 0,2,1
     }
   };
@@ -81,27 +80,10 @@ const CanvasLayer = () => {
   // temporary location for rooms
   const roomConfig = [
       {
-        splat: "nuke_2.splat",
-        name: "raum2",
-        adjacent: ["raum1"],
-        minX: -2, maxX: 1, minY: 0, maxY: 5, minZ: 5, maxZ: 5.65,
-        slopes: [],
-        objects: [],
-        elements: {
-          arrows: [],
-          panes: [
-            { position: { x: -40, y: -5, z: -40}, verticalRotation: Math.PI / 6, horizontalRotation: Math.PI/4, sizefactor: 10, content: "/images/testbild.png"},
-          ],
-          windowarcs: [
-            { position: { x: 40, y: 0, z: -40}, horizontalRotation: Math.PI / 4, arcRadius: 10, arcHeight: 20, content: "/images/testbild.png"}
-          ]
-        }
-      },
-      {
-        splat: "nuke_1.splat",
-        name: "raum1",
+        splat: "https://huggingface.co/cakewalk/splat-data/resolve/main/nike.splat",
+        name: "room1",
         adjacent: [],
-        minX: -2, maxX: 1, minY: 0, maxY: 5, minZ: 2, maxZ: 5,
+        minX: -100, maxX: 100, minY: 0, maxY: 5, minZ: -100, maxZ: 100,
         slopes: [],
         objects: [],
         elements: {
@@ -110,6 +92,7 @@ const CanvasLayer = () => {
           windowarcs: []
         }
       }
+
   ];
   return (
     <div className="absolute w-full h-full">
@@ -127,7 +110,7 @@ const CanvasLayer = () => {
         <UserInterfaceRenderer rooms={roomConfig} debug={splatOptions.debug}/>
         <TeleportControls ref={teleportControlsRef} />
         {isPointerLocked && <PointerLockControls />}
-        {currentSplats.length > 0 && <Splat position={[0, 0, 5]} src={currentSplats} key={currentKey} />}
+        {currentSplats.length > 0 && <Splat position={[0, 0, 0]} src={currentSplats} key={currentKey} />}
       </Canvas>
     </div>
   );
