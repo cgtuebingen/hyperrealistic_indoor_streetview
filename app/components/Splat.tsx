@@ -83,8 +83,8 @@ const SplatMaterial = /* @__PURE__ */ shaderMaterial(
     covAndColorTexture: null,
   },
   /*glsl*/ `
-    precision highp sampler2D;
-    precision highp usampler2D;
+    precision mediump sampler2D;
+    precision mediump usampler2D;
     out vec4 vColor;
     out vec3 vPosition;
     uniform vec2 resolution;
@@ -98,8 +98,7 @@ const SplatMaterial = /* @__PURE__ */ shaderMaterial(
       int v = int(value);
       int v0 = v >> 16;
       int v1 = (v & 0xFFFF);
-      if((v & 0x8000) != 0)
-        v1 |= 0xFFFF0000;
+      v1 |= (v & 0x8000) != 0 ? 0xFFFF0000 : 0;
       return vec2(float(v1), float(v0));
     }
 
@@ -108,8 +107,8 @@ const SplatMaterial = /* @__PURE__ */ shaderMaterial(
       ivec2 texPos = ivec2(splatIndex%uint(texSize.x), splatIndex/uint(texSize.x));
       vec4 centerAndScaleData = texelFetch(centerAndScaleTexture, texPos, 0);
       vec4 center = vec4(centerAndScaleData.xyz, 1);
-      vec4 camspace = modelViewMatrix * center;
-      vec4 pos2d = projectionMatrix * camspace;
+      vec4 camspace = projectionMatrix * modelViewMatrix * center;
+      vec4 pos2d = camspace;
 
       float bounds = 1.2 * pos2d.w;
       if (pos2d.z < -pos2d.w || pos2d.x < -bounds || pos2d.x > bounds
@@ -128,9 +127,13 @@ const SplatMaterial = /* @__PURE__ */ shaderMaterial(
         cov3D_M13_M22.x, cov3D_M23_M33.x, cov3D_M23_M33.y
       );
 
+      float invCamspaceZ = 1.0 / camspace.z;
+      float focalOverZ = focal * invCamspaceZ;
+      float focalOverZ2 = focal * invCamspaceZ * invCamspaceZ;
+
       mat3 J = mat3(
-        focal / camspace.z, 0., -(focal * camspace.x) / (camspace.z * camspace.z),
-        0., focal / camspace.z, -(focal * camspace.y) / (camspace.z * camspace.z),
+        focalOverZ, 0., -focalOverZ2 * camspace.x,
+        0., focalOverZ, -focalOverZ2 * camspace.y,
         0., 0., 0.
       );
 
