@@ -708,7 +708,6 @@ export function Splat({
     loader.chunkSize = chunkSize
     loader.splats = splats
   }) as SharedState
-  console.log(shared);
   // Listen to worker results, apply them to the target mesh
   React.useLayoutEffect(() => shared.connect(ref.current), [src])
   // Update the worker

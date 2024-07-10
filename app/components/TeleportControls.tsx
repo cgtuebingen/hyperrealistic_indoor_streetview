@@ -2,7 +2,7 @@ import React, { useImperativeHandle, useState } from 'react';
 import * as THREE from 'three';
 import { useThree, useFrame } from '@react-three/fiber';
 
-const TeleportControls = React.forwardRef((props, ref) => {
+export const TeleportControls = React.forwardRef((props, ref) => {
   const { camera } = useThree();
   const [teleportData, setTeleportData] = useState<{
     position: THREE.Vector3;
