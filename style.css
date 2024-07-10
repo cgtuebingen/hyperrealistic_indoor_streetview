@@ -1,0 +1,904 @@
+.main {
+  background-color: #0b0b0b;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.main .overlap-wrapper {
+  background-color: #0b0b0b;
+  overflow-x: hidden;
+  width: 1386px;
+  height: 3551px;
+}
+
+.main .overlap {
+  position: relative;
+  width: 2714px;
+  height: 3736px;
+  left: -1042px;
+}
+
+.main .background-blob {
+  position: absolute;
+  width: 2714px;
+  height: 2775px;
+  top: 961px;
+  left: 0;
+}
+
+.main .more-about-us {
+  position: absolute;
+  width: 1386px;
+  height: 591px;
+  top: 2960px;
+  left: 1042px;
+  background-color: #141619;
+}
+
+.main .div {
+  display: inline-flex;
+  align-items: flex-start;
+  position: relative;
+  top: 100px;
+  left: 192px;
+}
+
+.main .div-2 {
+  position: absolute;
+  width: 1056px;
+  height: 320px;
+  top: 0;
+  left: 0;
+}
+
+.main .overlap-group {
+  position: absolute;
+  width: 766px;
+  height: 698px;
+  top: -125px;
+  left: 428px;
+  background-image: url(./images/div-3.png);
+  background-size: 100% 100%;
+}
+
+.main .img {
+  position: absolute;
+  width: 344px;
+  height: 336px;
+  top: 89px;
+  left: 17px;
+}
+
+.main .div-3 {
+  position: absolute;
+  width: 324px;
+  height: 314px;
+  top: 229px;
+  left: 306px;
+}
+
+.main .div-4 {
+  position: absolute;
+  width: 528px;
+  height: 372px;
+  top: 51px;
+  left: -167px;
+}
+
+.main .div-5 {
+  position: relative;
+  width: 1056px;
+  height: 320px;
+}
+
+.main .text-wrapper {
+  position: absolute;
+  height: 78px;
+  top: -2px;
+  left: 244px;
+  font-family: "Inter-Medium", Helvetica;
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 56px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 78px;
+  white-space: nowrap;
+}
+
+.main .for-more-information {
+  position: absolute;
+  width: 624px;
+  height: 60px;
+  top: 130px;
+  left: 216px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #e5e5e5;
+  font-size: 18px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 30px;
+}
+
+.main .span {
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #e5e5e5;
+  font-size: 18px;
+  letter-spacing: 0;
+  line-height: 30px;
+}
+
+.main .button {
+  all: unset;
+  box-sizing: border-box;
+  top: 262px;
+  left: 437px;
+  display: inline-flex;
+  align-items: flex-start;
+  padding: 17px 28.5px 19px 27px;
+  position: absolute;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.main .button-before {
+  top: 0;
+  position: absolute;
+  width: 192px;
+  height: 58px;
+  left: 0;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgb(102, 93, 205) 0%, rgb(95, 164, 230) 44.76%, rgb(210, 171, 103) 100%);
+}
+
+.main .visit-github {
+  position: relative;
+  width: fit-content;
+  margin-top: -1px;
+  font-family: "Inter-Medium", Helvetica;
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 19px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 22px;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+.main .div-wrapper {
+  display: inline-flex;
+  height: 463px;
+  align-items: flex-start;
+  position: absolute;
+  top: 2348px;
+  left: 1265px;
+}
+
+.main .div-6 {
+  position: relative;
+  width: 1056px;
+  height: 605px;
+  margin-bottom: -142px;
+}
+
+.main .div-7 {
+  position: absolute;
+  width: 429px;
+  height: 598px;
+  top: 7px;
+  left: 627px;
+}
+
+.main .text-wrapper-2 {
+  position: absolute;
+  width: 404px;
+  height: 89px;
+  top: -2px;
+  left: 0;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #ffffff;
+  font-size: 36px;
+  letter-spacing: 0;
+  line-height: 44px;
+}
+
+.main .p {
+  position: absolute;
+  width: 393px;
+  height: 53px;
+  top: 114px;
+  left: 0;
+  font-family: "Inter-Bold", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: 28px;
+}
+
+.main .preparation-planning {
+  position: absolute;
+  width: 422px;
+  height: 293px;
+  top: 187px;
+  left: 0;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #e5e5e5;
+  font-size: 19px;
+  letter-spacing: 0;
+  line-height: 30px;
+}
+
+.main .text {
+  position: absolute;
+  height: 30px;
+  top: 254px;
+  left: 589px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #ffffff;
+  font-size: 19px;
+  letter-spacing: 0;
+  line-height: 30px;
+  white-space: nowrap;
+}
+
+.main .overlap-group-wrapper {
+  position: absolute;
+  width: 422px;
+  height: 387px;
+  top: 0;
+  left: 0;
+}
+
+.main .overlap-2 {
+  position: relative;
+  width: 772px;
+  height: 760px;
+  top: -210px;
+  left: -110px;
+  background-image: url(./images/div-2.png);
+  background-size: 100% 100%;
+}
+
+.main .div-8 {
+  position: relative;
+  width: 432px;
+  height: 387px;
+  top: 210px;
+  left: 110px;
+}
+
+.main .overlap-3 {
+  position: relative;
+  width: 530px;
+  height: 483px;
+  top: -10px;
+  left: -6px;
+}
+
+.main .grid-png {
+  position: absolute;
+  width: 514px;
+  height: 321px;
+  top: 162px;
+  left: 8px;
+}
+
+.main .div-9 {
+  position: absolute;
+  width: 514px;
+  height: 387px;
+  top: 96px;
+  left: 0;
+}
+
+.main .overlap-4 {
+  position: absolute;
+  width: 508px;
+  height: 374px;
+  top: -86px;
+  left: 38px;
+}
+
+.main .binance-top-png-wrapper {
+  position: absolute;
+  width: 42px;
+  height: 55px;
+  top: 284px;
+  left: 16px;
+  background-image: url(./images/binance-base-png.png);
+  background-size: 100% 100%;
+}
+
+.main .binance-top-png {
+  position: absolute;
+  width: 42px;
+  height: 29px;
+  top: -4px;
+  left: 0;
+}
+
+.main .group {
+  position: absolute;
+  width: 508px;
+  height: 374px;
+  top: 0;
+  left: 0;
+}
+
+.main .group-2 {
+  position: absolute;
+  width: 40px;
+  height: 80px;
+  top: 272px;
+  left: 290px;
+  transform: rotate(-142.38deg);
+}
+
+.main .overlap-group-2 {
+  position: relative;
+  width: 388px;
+  height: 389px;
+  top: -203px;
+  left: -274px;
+}
+
+.main .union {
+  position: absolute;
+  width: 274px;
+  height: 279px;
+  top: 55px;
+  left: 57px;
+  transform: rotate(142.38deg);
+}
+
+.main .ellipse {
+  position: absolute;
+  width: 40px;
+  height: 12px;
+  top: 203px;
+  left: 274px;
+  border-radius: 20.13px/5.94px;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0.49) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.main .bitkub-top-png-wrapper {
+  position: absolute;
+  width: 26px;
+  height: 38px;
+  top: 327px;
+  left: 384px;
+  background-image: url(./images/bitkub-base-png.png);
+  background-size: 100% 100%;
+}
+
+.main .bitkub-top-png {
+  position: absolute;
+  width: 26px;
+  height: 17px;
+  top: -2px;
+  left: 0;
+}
+
+.main .bnb-top-png-wrapper {
+  position: absolute;
+  width: 50px;
+  height: 66px;
+  top: 289px;
+  left: 242px;
+  background-image: url(./images/bnb-base-png.png);
+  background-size: 100% 100%;
+}
+
+.main .bnb-top-png {
+  position: absolute;
+  width: 50px;
+  height: 33px;
+  top: -4px;
+  left: 0;
+}
+
+.main .solana-top-png-wrapper {
+  position: absolute;
+  width: 26px;
+  height: 38px;
+  top: 326px;
+  left: 129px;
+  background-image: url(./images/solana-base-png.png);
+  background-size: 100% 100%;
+}
+
+.main .solana-top-png {
+  position: absolute;
+  width: 26px;
+  height: 16px;
+  top: -2px;
+  left: 0;
+}
+
+.main .ellipse-2 {
+  position: absolute;
+  width: 158px;
+  height: 143px;
+  top: 10px;
+  left: 37px;
+  border-radius: 79px/71.5px;
+  box-shadow: 50px 100px 100px #0000004c;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.main .ellipse-3 {
+  position: absolute;
+  width: 112px;
+  height: 105px;
+  top: 0;
+  left: 418px;
+  border-radius: 56px/52.5px;
+  box-shadow: 50px 100px 100px #0000004c;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.main .our-project {
+  position: absolute;
+  width: 1375px;
+  height: 725px;
+  top: 1527px;
+  left: 1048px;
+}
+
+.main .overlap-5 {
+  position: relative;
+  width: 1097px;
+  height: 701px;
+  top: 24px;
+  left: 140px;
+}
+
+.main .KIMMS-logo {
+  position: absolute;
+  width: 389px;
+  height: 208px;
+  top: 339px;
+  left: 609px;
+}
+
+.main .KI-makerspace-logo {
+  position: absolute;
+  width: 314px;
+  height: 140px;
+  top: 373px;
+  left: 634px;
+}
+
+.main .div-10 {
+  display: flex;
+  flex-direction: column;
+  width: 1097px;
+  height: 701px;
+  align-items: flex-start;
+  gap: 137px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.main .projekt-im-fokus {
+  position: relative;
+  width: 1056px;
+  height: 192px;
+}
+
+.main .text-wrapper-3 {
+  position: absolute;
+  height: 78px;
+  top: -2px;
+  left: 377px;
+  font-family: "Inter-Medium", Helvetica;
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 56px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 78px;
+  white-space: nowrap;
+}
+
+.main .text-wrapper-4 {
+  position: absolute;
+  width: 620px;
+  height: 120px;
+  top: 110px;
+  left: 218px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #e5e5e5;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 30px;
+}
+
+.main .details-zum-KI-wrapper {
+  display: inline-flex;
+  height: 479px;
+  align-items: flex-start;
+  gap: 92px;
+  padding: 0px 119.22px 0px 0px;
+  position: relative;
+  margin-bottom: -107px;
+}
+
+.main .details-zum-KI {
+  position: relative;
+  width: 455px;
+  height: 479px;
+}
+
+.main .text-wrapper-5 {
+  position: absolute;
+  width: 392px;
+  height: 53px;
+  top: 129px;
+  left: 0;
+  font-family: "Inter-Bold", Helvetica;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: 28px;
+}
+
+.main .text-wrapper-6 {
+  position: absolute;
+  width: 396px;
+  height: 115px;
+  top: 256px;
+  left: 0;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #e5e5e5;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: 30px;
+}
+
+.main .about-us {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 64px;
+  position: absolute;
+  top: 788px;
+  left: 1207px;
+}
+
+.main .div-11 {
+  position: relative;
+  width: 1056px;
+  height: 252px;
+}
+
+.main .text-wrapper-7 {
+  position: absolute;
+  height: 78px;
+  top: -2px;
+  left: 404px;
+  font-family: "Inter-Medium", Helvetica;
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 56px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 78px;
+  white-space: nowrap;
+}
+
+.main .we-are-a-team-of {
+  position: absolute;
+  width: 612px;
+  height: 150px;
+  top: 100px;
+  left: 222px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #e5e5e5;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 30px;
+}
+
+.main .div-12 {
+  display: inline-flex;
+  align-items: flex-start;
+  position: relative;
+  flex: 0 0 auto;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.main .div-13 {
+  position: relative;
+  width: 1056px;
+  height: 356px;
+}
+
+.main .silvan {
+  position: absolute;
+  width: 264px;
+  height: 180px;
+  top: 0;
+  left: 0;
+}
+
+.main .text-wrapper-8 {
+  position: absolute;
+  width: 131px;
+  height: 50px;
+  top: 37px;
+  left: 67px;
+  font-family: "Inter-Medium", Helvetica;
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 32px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 68px;
+  white-space: nowrap;
+}
+
+.main .icon-github {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 113px;
+  left: 112px;
+}
+
+.main .text-wrapper-9 {
+  position: absolute;
+  width: 227px;
+  height: 25px;
+  top: 87px;
+  left: 18px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #e5e5e5;
+  font-size: 18px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 30px;
+  white-space: nowrap;
+}
+
+.main .sara {
+  position: absolute;
+  width: 264px;
+  height: 180px;
+  top: 0;
+  left: 264px;
+}
+
+.main .louis {
+  position: absolute;
+  width: 264px;
+  height: 180px;
+  top: 0;
+  left: 528px;
+}
+
+.main .fabian {
+  position: absolute;
+  width: 264px;
+  height: 180px;
+  top: 0;
+  left: 792px;
+}
+
+.main .norbert {
+  position: absolute;
+  width: 264px;
+  height: 176px;
+  top: 180px;
+  left: 0;
+}
+
+.main .markus {
+  position: absolute;
+  width: 264px;
+  height: 176px;
+  top: 180px;
+  left: 264px;
+}
+
+.main .niclas {
+  position: absolute;
+  width: 264px;
+  height: 176px;
+  top: 180px;
+  left: 528px;
+}
+
+.main .pascal {
+  position: absolute;
+  width: 264px;
+  height: 176px;
+  top: 180px;
+  left: 792px;
+}
+
+.main .div-14 {
+  position: absolute;
+  width: 2px;
+  height: 352px;
+  top: 2px;
+  left: 263px;
+  background: linear-gradient(180deg, rgb(102, 93, 205) 0%, rgb(95, 164, 230) 44.76%, rgb(210, 171, 103) 100%);
+}
+
+.main .div-15 {
+  position: absolute;
+  width: 2px;
+  height: 352px;
+  top: 2px;
+  left: 527px;
+  background: linear-gradient(180deg, rgb(102, 93, 205) 0%, rgb(95, 164, 230) 44.76%, rgb(210, 171, 103) 100%);
+}
+
+.main .div-16 {
+  position: absolute;
+  width: 2px;
+  height: 352px;
+  top: 2px;
+  left: 791px;
+  background: linear-gradient(180deg, rgb(102, 93, 205) 0%, rgb(95, 164, 230) 44.76%, rgb(210, 171, 103) 100%);
+}
+
+.main .div-17 {
+  position: absolute;
+  width: 1052px;
+  height: 2px;
+  top: 178px;
+  left: 2px;
+  background: linear-gradient(180deg, rgb(102, 93, 205) 0%, rgb(95, 164, 230) 44.76%, rgb(210, 171, 103) 100%);
+}
+
+.main .titel {
+  position: absolute;
+  width: 1386px;
+  height: 810px;
+  top: 0;
+  left: 1042px;
+}
+
+.main .overlap-6 {
+  position: relative;
+  height: 746px;
+  top: 157px;
+}
+
+.main .div-before-wrapper {
+  position: absolute;
+  width: 1386px;
+  height: 308px;
+  top: 438px;
+  left: 0;
+  overflow: hidden;
+}
+
+.main .div-before {
+  position: relative;
+  width: 1440px;
+  height: 92px;
+  top: 22px;
+  background: linear-gradient(180deg, rgb(20, 22, 25) 80%, rgba(20, 22, 25, 0) 100%);
+}
+
+.main .div-18 {
+  position: absolute;
+  width: 591px;
+  height: 627px;
+  top: 0;
+  left: 398px;
+}
+
+.main .h {
+  position: absolute;
+  width: 536px;
+  height: 125px;
+  top: 107px;
+  left: 28px;
+}
+
+.main .logo-titel {
+  position: absolute;
+  width: 536px;
+  top: 27px;
+  left: -1px;
+  -webkit-text-stroke: 0.6px #ffffff;
+  font-family: "Kdam Thmor-Regular", Helvetica;
+  font-weight: 400;
+  color: #ffffff;
+  font-size: 64px;
+  text-align: center;
+  letter-spacing: 2.56px;
+  line-height: 64px;
+  white-space: nowrap;
+}
+
+.main .text-wrapper-10 {
+  letter-spacing: 1.64px;
+  line-height: 22px;
+}
+
+.main .text-wrapper-11 {
+  font-size: 36px;
+  letter-spacing: 0.52px;
+  line-height: 22px;
+}
+
+.main .text-wrapper-12 {
+  font-size: 49px;
+  letter-spacing: 0.96px;
+  line-height: 39px;
+}
+
+.main .as-part-of-our {
+  position: absolute;
+  width: 528px;
+  height: 90px;
+  top: 267px;
+  left: 32px;
+  font-family: "Inter-Regular", Helvetica;
+  font-weight: 400;
+  color: #e5e5e5;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 30px;
+}
+
+.main .button-2 {
+  all: unset;
+  box-sizing: border-box;
+  top: 459px;
+  left: 208px;
+  display: inline-flex;
+  align-items: flex-start;
+  padding: 17px 28.5px 19px 27px;
+  position: absolute;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.main .button-before-2 {
+  top: 1px;
+  position: absolute;
+  width: 192px;
+  height: 58px;
+  left: 0;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgb(102, 93, 205) 0%, rgb(95, 164, 230) 44.76%, rgb(210, 171, 103) 100%);
+}
+
+.main .start-tour {
+  position: relative;
+  width: fit-content;
+  margin-top: -1px;
+  font-family: "Inter-Medium", Helvetica;
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 19px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 22px;
+  white-space: nowrap;
+}
