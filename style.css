@@ -8,14 +8,14 @@
 
 .main .overlap-wrapper {
   background-color: #0b0b0b;
-  overflow-x: hidden;
-  width: 1386px;
+  overflow-x: auto;
+  width: 100vw;
   height: 3551px;
 }
 
 .main .overlap {
   position: relative;
-  width: 2714px;
+  width: 100vw;
   height: 3736px;
   left: -1042px;
 }
