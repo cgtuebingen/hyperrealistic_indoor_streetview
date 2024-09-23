@@ -1,6 +1,4 @@
 # Documentation
-ToDo: Convert this to ReadMe when finished
-
 ## Overview
 
 ## Table of Contents
@@ -21,10 +19,7 @@ ToDo: Convert this to ReadMe when finished
 
 
 
-## Code added and how it works
-What features were added? 
-**Scene Selector**
-*In Progress*
+## Features
 
 **Teleportation**
 The teleportation features offer the possibility to let the user teleport to points of interest in the scene with a click of a button. 
@@ -34,17 +29,41 @@ It introduces the `handleTeleport()` function in `CanvasLayer.tsx` which is used
 **Minimap**
 *In Progress*
 
+**Rendering Changes**
+The Web-Viewer now supports room based rendering, meaning multiple splats can be used and loaded depending on where the user is in the scene. You can define rooms as an object following this pattern: 
+```
+const roomConfig = [
+      {
+        splat: "../../public/Splat.splat",
+        name: "room1",
+        adjacent: [],
+        minX: -100, maxX: 100, minY: 0, maxY: 5, minZ: -100, maxZ: 100,
+        slopes: [],
+        objects: [],
+        elements: {
+          arrows: [],
+          panes: [],
+          windowarcs: []
+        }
+      }
+  ];
+```
+
 
 **3D Bounding Boxes**
 There are now 3D Bounding Boxes which limit the space the user can move to. These can be moved to reflect the internal structure of a splat. 
 
+**Arrows**
+
 **Interactive Elements**
+Interactive 3D Elements were added to help the user 
 
 **Improved User Controls**
 User Controls were changed to feel more like conventional controls in a First-Person Games (WASD-Control-Scheme). Camera height is constant.
 
 
 **Performance Improvements**
+Performance was improved on low-end machines via small optimization with about 5-10fps gained. 
 
 
 ## Example for Inspiration for your own projects
