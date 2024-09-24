@@ -99,13 +99,13 @@ arrowGraph.addEdge("arrowOneName", "arrowTwoName"); // the arrow names are the n
 
 ```
 
-**3D Bounding Boxes**
+**3D Bounding Boxes**\
 There are now 3D Bounding Boxes which limit the space the user can move to. These can be moved to reflect the internal structure of a splat. 
 
-**Interactive Elements**
+**Interactive Elements**\
 Interactive 3D Elements were added to help the user interact with the scene. As the feature is in active developement it will be documented in the future
 
-**Improved User Controls**
+**Improved User Controls**\
 User Controls were changed to feel more like conventional controls in a First-Person Games (WASD-Control-Scheme). Camera height is now constant. Below is an overwiew of the important functions.
 `FirstPersonControls ({ speed, rooms, updateCurrentRoom }): null` is the function that defines user controls and can be imported under the same name. Below the parameters are explained:
 ```
@@ -122,29 +122,29 @@ updateCurrentRoom(newRoom: room): void
 ```
 The control-scheme can easily be extended by adding keys inside the switch cases in onKeyDown and onKeyUp. Make sure to add it in both to be able to stop moving.
 
-**Performance Improvements**
+**Performance Improvements**\
 Performance was improved on low-end machines via small optimization with about 5-10fps gained. 
 
 ## Example for Inspiration for your own projects
 This is the project the codes was written for and may serve as an example for what you can do with this (and maybe what not).
 
-**Outline**
+**Outline**\
 A small community center was mapped from the inside via Gaussian Splatting with bounding boxes added to mimick the architecture of the building. The goal was to be able to move inside the building like inside a video game.
 
 The project was deployed on a server via GitHub. To keep the project updated GitHub Actions was used to automatically pull merges and pushes to main on to the server and restarting it. 
 
-**GitHub Actions**
+**GitHub Actions**\
 GitHub Actions was used to automatically deploy updates to the server. Uses shimataro/ssh-key-action@v2 to ssh onto the server and automatically reinstall Node and Yarn to then pull the new version from GitHub and then restart the server. 
 
-**Splat Creation**
+**Splat Creation**\
 *!Please note that the method described here is probably outdated and you should do your own research on how to create splats!*
 To create splats Nerfstudios [Splatfacto](https://docs.nerf.studio/nerfology/methods/splat.html) was used. Splatfacto relies on [Colmap](https://colmap.github.io/) and [FFmpeg](https://www.ffmpeg.org/), so make sure you have these installed when using Splatfacto.
 Colmap is difficult to work with, so make sure to only feed it clear, unshaky images taken from very even angles. For further install instructions consult the respective websites.
 
-**Splat Cleanup**
+**Splat Cleanup**\
 The splats were cleaned up using [Supersplat]() and [Blender](https://www.blender.org/) with the [Gaussian-Splatting](https://github.com/ReshotAI/gaussian-splatting-blender-addon) addon to load the files. Blender was used as a work-around to be able to edit and move point-clouds while Supersplat is a lightweight web-editor and viewer for splats that makes it easy to edit splats by removing gaussians and reorienting the splat. 
 
-**Landing Page**
+**Landing Page**\
 A landing page was created to integrate the viewer into a larger context and offer information on the project.
 
 
