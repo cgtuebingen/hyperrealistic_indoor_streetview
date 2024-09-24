@@ -23,15 +23,15 @@ Hyperrealistic Indoor Streetview is a student project under the tutorship of [Ja
 
 ## Features
 
-**Teleportation**
+**Teleportation**\
 The teleportation features offer the possibility to let the user teleport to points of interest in the scene with a click of a button. 
 It introduces the `handleTeleport()` function in `CanvasLayer.tsx` which is used to teleport the User to a location defined inside the function. It uses the `teleport(x: number, y: number, z: number, lookAtX: number, lookAtY: number, lookAtZ: number)` which is defined in teleportControls.tsx and handles the actual logic behind the teleportation.
 
 
-**Minimap**
+**Minimap**\
 *In Progress*
 
-**Rendering Changes and Additions**
+**Rendering Changes and Additions**\
 The Web-Viewer now supports room based rendering, meaning multiple splats can be used and loaded depending on where the user is in the scene. You can define rooms as an object in the roomConfig array following this pattern: 
 ```
 const roomConfig = [
