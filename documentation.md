@@ -29,8 +29,8 @@ It introduces the `handleTeleport()` function in `CanvasLayer.tsx` which is used
 **Minimap**
 *In Progress*
 
-**Rendering Changes**
-The Web-Viewer now supports room based rendering, meaning multiple splats can be used and loaded depending on where the user is in the scene. You can define rooms as an object following this pattern: 
+**Rendering Changes and Additions**
+The Web-Viewer now supports room based rendering, meaning multiple splats can be used and loaded depending on where the user is in the scene. You can define rooms as an object in the roomConfig array following this pattern: 
 ```
 const roomConfig = [
       {
@@ -48,12 +48,42 @@ const roomConfig = [
       }
   ];
 ```
+Also introduced were slopes, objects and elements like panes and windowarcs. To add a pane simply push it into the pane array via `roomConfig[n].elements.panes.push(pane1)`.
+To make a pane create an object with the following pattern:
+```
+{position: xyz-coordinates, verticalRotation: number, horizontalRotation: number, sizeFactor: number, content: content}
+```
+windowarcs work similiarly with the required attributes being
+```
+{position: xyz-coordinates, horizontalRotation: number, arcRadius: number, arcHeight: number, content: content}
+```
+Arrrows where added to support guiding the user through splats. Arrows follow the pattern:
+```
+{position: xyz-coordinates, graphName: string}   
+```
+To connect the single arrows in an arrowGraph you need to add the edges to an ArrowGraph. You create an ArrowGraph with the new ArrowGraph constructor like this:
+```
+const graph = new ArrowGraph(scene: THREE.Scene);
+```
+It has three attributes:
+```
+graph: arrowgraph \\ Holds edges and arrows
+arrowsShortestPaths: (THREE.Object3D|undefined)[][] \\Holds the shortest paths between the arrows
+scene: THREE.Scene \\ Holds the THREE Scene
+```
+Methods are:
+- `addArrow(arrow: THREE.Object3D): void` 
+Adds arrows to the graph
+- `addEdge(arrow1name: string, arrow2name: string): void` 
+Adds edges between the arrows (at this point it is necessary to connect the arrows manually)
+- `findShortestPaths(): void` 
+Finds the shortest paths between all arrows and saves them in arrowsShortestPaths
+ 
+
 
 
 **3D Bounding Boxes**
 There are now 3D Bounding Boxes which limit the space the user can move to. These can be moved to reflect the internal structure of a splat. 
-
-**Arrows**
 
 **Interactive Elements**
 Interactive 3D Elements were added to help the user 
