@@ -78,6 +78,9 @@ Adds arrows to the graph
 Adds edges between the arrows (at this point it is necessary to connect the arrows manually)
 - `findShortestPaths(): void` 
 Finds the shortest paths between all arrows and saves them in arrowsShortestPaths
+- `updateArrowRotations(destinationArrowName: string): void`
+Updates the rotations of all arrows so they point towards the target arrow along the shortest path to it.  
+
  
 
 
