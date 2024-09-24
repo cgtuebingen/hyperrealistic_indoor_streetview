@@ -79,19 +79,45 @@ const CanvasLayer = () => {
 
   // temporary location for rooms
   const roomConfig = [
-      {
-        splat: "https://huggingface.co/cakewalk/splat-data/resolve/main/nike.splat",
-        name: "room1",
-        adjacent: [],
-        minX: -100, maxX: 100, minY: 0, maxY: 5, minZ: -100, maxZ: 100,
-        slopes: [],
-        objects: [],
-        elements: {
-          arrows: [],
-          panes: [],
-          windowarcs: []
-        }
+    {
+      splat: "./musik.splat",
+      name: "musik",
+      adjacent: ["gang"],
+      minX: -100, maxX: 100, minY: 0, maxY: 5, minZ: -100, maxZ: 100,
+      slopes: [],
+      objects: [],
+      elements: {
+        arrows: [],
+        panes: [],
+        windowarcs: []
       }
+    },      
+    {
+      splat: "./gang.splat",
+      name: "gang",
+      adjacent: ["musik", "elektrozimmer"],
+      minX: -100, maxX: 100, minY: 0, maxY: 5, minZ: -100, maxZ: 100,
+      slopes: [],
+      objects: [],
+      elements: {
+        arrows: [],
+        panes: [],
+        windowarcs: []
+      }
+    },      
+    {
+      splat: "./elektrozimmer.splat",
+      name: "elektrozimmer",
+      adjacent: ["gang"],
+      minX: -100, maxX: 100, minY: 0, maxY: 5, minZ: -100, maxZ: 100,
+      slopes: [],
+      objects: [],
+      elements: {
+        arrows: [],
+        panes: [],
+        windowarcs: []
+      }
+    }
 
   ];
   return (
