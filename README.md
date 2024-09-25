@@ -34,6 +34,7 @@ The pipeline includes several steps such as data acquisition, preprocessing, tra
 ---
 
 ## Features
+For additional information feel free to visit our [Wiki](https://github.com/cgtuebingen/hyperrealistic_indoor_streetview/wiki).
 
 **Teleportation**\
 The teleportation features offer the possibility to let the user teleport to points of interest in the scene with a click of a button. 
