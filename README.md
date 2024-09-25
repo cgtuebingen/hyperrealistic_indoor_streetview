@@ -1,3 +1,6 @@
+# Hyperrealistic Indoor Streetview
+https://github.com/user-attachments/assets/cbde01e2-ca74-455a-9ea1-d33eb5a8ab1a
+
 ## Overview
 **Hyperrealistic Indoor Streetview** is a project that brings high-fidelity, photorealistic 3D reconstructions of indoor environments to the web. This project utilizes state-of-the-art techniques such as Gaussian Splatting and Neural Radiance Fields (NeRFs) to create a dynamic and interactive experience of indoor scenes, directly accessible via web browsers.
 
