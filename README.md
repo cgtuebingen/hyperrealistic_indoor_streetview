@@ -12,6 +12,8 @@ The pipeline includes several steps such as data acquisition, preprocessing, tra
 - **Performance Improvements**: Over other solutions through culling and unloading of splats. 
 - **Navigation Through Buildings**: Display arrows that lead you to your destination.
 
+---
+
 ## Getting Started
 ### Via Docker
 - Install [Docker](https://www.docker.com/) (Required!)
@@ -28,6 +30,8 @@ The pipeline includes several steps such as data acquisition, preprocessing, tra
 **Requirements:** [Node](https://nodejs.org/en) and yarn (install via `npm install -g yarn`)
 - Clone the code from [GitHub](https://github.com/cgtuebingen/hyperrealistic_indoor_streetview): `git clone git@github.com:cgtuebingen/hyperrealistic_indoor_streetview.git`
 - Run `yarn dev` in the terminal in the root directory of the project (should be hyperrealistic_indoor_streetview)
+
+---
 
 ## Features
 
@@ -131,6 +135,8 @@ The control-scheme can easily be extended by adding keys inside the switch cases
 
 **Performance Improvements**\
 Performance was improved on low-end machines via small optimization with about 5-10fps gained. 
+
+---
 
 ## Example for Inspiration for your own projects
 This is the project the codes was written for and may serve as an example for what you can do with this (and maybe what not).
