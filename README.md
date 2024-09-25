@@ -1,9 +1,15 @@
-# ReadMe
 ## Overview
-Hyperrealistic Indoor Streetview is a student project under the tutorship of [Jan-Niklas Dihlmann](https://github.com/JDihlmann) from the University of Tübingen aiming to use Gaussian Splatting for creating photo-realistic web-viewable 3D enviroments of indoor spaces inspired from Google Streetview. It supports modelling 3D enviroments with bounding boxes, offers a number of quality of life features and introduces a game inspired control scheme.
+**Hyperrealistic Indoor Streetview** is a project that brings high-fidelity, photorealistic 3D reconstructions of indoor environments to the web. This project utilizes state-of-the-art techniques such as Gaussian Splatting and Neural Radiance Fields (NeRFs) to create a dynamic and interactive experience of indoor scenes, directly accessible via web browsers.
 
-## Installation
+The pipeline includes several steps such as data acquisition, preprocessing, training, and rendering, and leverages powerful computing clusters for optimizing the scene data. The final result can be explored interactively, offering a smooth and immersive user experience.
 
+### Key Features
+- **Photorealistic 3D reconstructions**: Leveraging NeRF and Gaussian Splatting techniques.
+- **Interactive Web Viewing**: Real-time exploration of indoor environments in web browsers using React.
+- **Performance Improvements**: Over other solutions through culling and unloading of splats. 
+- **Navigation Through Buildings**: Display arrows that lead you to your destination.
+
+## Getting Started
 ### Via Docker
 - Install [Docker](https://www.docker.com/) (Required!)
 **If you want to use your own splats**
@@ -15,7 +21,6 @@ Hyperrealistic Indoor Streetview is a student project under the tutorship of [Ja
 - `docker image pull fabiuni/teamprojekt` Download the image
 - `docker run -dp:3000:3000 fabiuni/teamprojekt` Run the image
 
-
 ### Via GitHub
 **Requirements:** [Node](https://nodejs.org/en) and yarn (install via `npm install -g yarn`)
 - Clone the code from [GitHub](https://github.com/cgtuebingen/hyperrealistic_indoor_streetview): `git clone git@github.com:cgtuebingen/hyperrealistic_indoor_streetview.git`
@@ -26,7 +31,6 @@ Hyperrealistic Indoor Streetview is a student project under the tutorship of [Ja
 **Teleportation**\
 The teleportation features offer the possibility to let the user teleport to points of interest in the scene with a click of a button. 
 It introduces the `handleTeleport()` function in `CanvasLayer.tsx` which is used to teleport the User to a location defined inside the function. It uses the `teleport(x: number, y: number, z: number, lookAtX: number, lookAtY: number, lookAtZ: number)` which is defined in teleportControls.tsx and handles the actual logic behind the teleportation.
-
 
 **Minimap**\
 *In Progress*
@@ -147,4 +151,21 @@ The splats were cleaned up using [Supersplat]() and [Blender](https://www.blende
 **Landing Page**\
 A landing page was created to integrate the viewer into a larger context and offer information on the project.
 
+---
+
+## About
+This project was created by a team of eight bachelor students under the tutorship of [Jan-Niklas Dilman](https://github.com/JDihlmann) at the University of Tübingen in one semester. We learned a lot in this project and hope you enjoy it. If you find any bugs, issues or otherwise want to give feedback feel free to open an issue!
+
+---
+
+## License
+This project is licensed under the MIT License, which allows for free use, modification, and distribution of the code. You are free to use this software in both personal and commercial projects as long as you include the original copyright notice. Please refer to the [LICENSE](LICENSE.md) file for more details.
+
+
+This software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the software or the use or other dealings in the software.
+
+
+> **Disclaimer**: 
+> Any work including gaussian-splatting may falls under their respective [LICENSE](https://github.com/graphdeco-inria/gaussian-splatting/blob/main/LICENSE.md)
+---
 
