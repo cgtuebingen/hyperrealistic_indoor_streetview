@@ -37,14 +37,14 @@ The pipeline includes several steps such as data acquisition, preprocessing, tra
 For additional information feel free to visit our [Wiki](https://github.com/cgtuebingen/hyperrealistic_indoor_streetview/wiki).
 
 **Teleportation**\
-The teleportation features offer the possibility to let the user teleport to points of interest in the scene with a click of a button. 
+The teleportation feature offers the possibility to let the user teleport to points of interest in the scene with a click of a button. 
 It introduces the `handleTeleport()` function in `CanvasLayer.tsx` which is used to teleport the User to a location defined inside the function. It uses the `teleport(x: number, y: number, z: number, lookAtX: number, lookAtY: number, lookAtZ: number)` which is defined in teleportControls.tsx and handles the actual logic behind the teleportation.
 
 **Minimap**\
 *In Progress*
 
 **Rendering Changes and Additions**\
-The Web-Viewer now supports room based rendering, meaning multiple splats can be used and loaded depending on where the user is in the scene. You can define rooms as an object in the roomConfig array following this pattern: 
+The Web-Viewer now supports room based rendering, meaning multiple splats can be used, loaded and unloaded depending on where the user is in the scene. You can define rooms as an object in the roomConfig array following this pattern: 
 ```
 const roomConfig = [
       {
@@ -62,16 +62,31 @@ const roomConfig = [
       }
   ];
 ```
-Also introduced were slopes, objects and elements like panes and windowarcs. To add a pane simply push it into the pane array via `roomConfig[n].elements.panes.push(pane1)`.
-To make a pane create an object with the following pattern:
+This allows for dynamic loading and undloading of the nearest rooms which greatly improves the performance:
+https://github.com/user-attachments/assets/748d0ef7-815c-4ffe-a272-c56ff2348712
+
+
+
+
+
+Also introduced were slopes, objects and elements like panes and windowarcs. To add a pane simply push it into the pane array via `roomConfig[n].elements.panes.push(pane1)`.<br>
+<img src="https://github.com/user-attachments/assets/1fee5b88-8e93-4ca1-a03a-6cb8a426fae3" alt="image" width="472"/>
+<img src="https://github.com/user-attachments/assets/a167d706-9df2-49a4-9f5e-be80590bd40e" alt="image" width="300"/>
+
+To make a pane which holds a picture create an object with the following pattern:
 ```
 {position: xyz-coordinates, verticalRotation: number, horizontalRotation: number, sizeFactor: number, content: content}
+
+
 ```
-windowarcs work similiarly with the required attributes being
+As everything outside windows most of the time isn't splatted properly we added "windowarcs", which act as a replacement of the splats behind the windows with a picture.  
+Windowarcs work similarly to panes with the required attributes being
 ```
 {position: xyz-coordinates, horizontalRotation: number, arcRadius: number, arcHeight: number, content: content}
 ```
-Arrrows where added to support guiding the user through splats. Arrows follow the pattern:
+![image](https://github.com/user-attachments/assets/d156e733-4cc1-4cbf-b642-f7b9c4fb560e)
+
+Arrrows were added to support guiding the user through splats. Arrows follow the pattern:
 ```
 {position: xyz-coordinates, graphName: string}   
 ```
@@ -110,6 +125,9 @@ arrowGraph.addEdge("arrowOneName", "arrowTwoName"); // the arrow names are the n
 // need know these names before entering them
 
 ```
+https://github.com/user-attachments/assets/a3f4523d-f2e1-4514-aac0-26c259e4ef9a
+
+
 
 **3D Bounding Boxes**\
 There are now 3D Bounding Boxes which limit the space the user can move to. These can be moved to reflect the internal structure of a splat. 
