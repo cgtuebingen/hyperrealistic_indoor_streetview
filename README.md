@@ -67,6 +67,10 @@ https://github.com/user-attachments/assets/748d0ef7-815c-4ffe-a272-c56ff2348712
 
 
 
+https://github.com/user-attachments/assets/2900fa7e-f75e-46a6-a6c3-951e27efa664
+
+
+
 
 
 Also introduced were slopes, objects and elements like panes and windowarcs. To add a pane simply push it into the pane array via `roomConfig[n].elements.panes.push(pane1)`.<br>
