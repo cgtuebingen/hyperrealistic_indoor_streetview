@@ -186,7 +186,7 @@ A landing page was created to integrate the viewer into a larger context and off
 ---
 
 ## About
-This project was created by a team of eight bachelor students under the tutorship of [Jan-Niklas Dilman](https://github.com/JDihlmann) at the University of Tübingen in one semester. We learned a lot in this project and hope you enjoy it. If you find any bugs, issues or otherwise want to give feedback feel free to open an issue!
+This project was created by a team of eight bachelor students under the tutorship of [Jan-Niklas Dihlmann](https://github.com/JDihlmann) at the University of Tübingen in one semester. We learned a lot in this project and hope you enjoy it. If you find any bugs, issues or otherwise want to give feedback feel free to open an issue!
 
 ---
 
